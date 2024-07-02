@@ -13,7 +13,7 @@ import Modal from '../components/Modal';
 import Title from '../components/Title';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function PlayLists({navigation}: PlayListScreenProps) {
+const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
   const favorites = useQueueStore(state => state.favorites);
   const [visible, setVisible] = useState<boolean>(false);
   const [namePlayList, setNamePlayList] = useState('');
@@ -97,7 +97,7 @@ export default function PlayLists({navigation}: PlayListScreenProps) {
       </Container>
     </>
   );
-}
+};
 
 const style = StyleSheet.create({
   playListContainer: {
@@ -137,3 +137,5 @@ const style = StyleSheet.create({
     flexDirection: 'row-reverse',
   },
 });
+
+export default PlayListsScreen;

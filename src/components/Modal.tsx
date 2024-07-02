@@ -1,6 +1,6 @@
-import React, { ReactNode } from 'react';
-import { Modal as ModalNative, StyleSheet, View } from 'react-native';
-import { COLORS } from '../constants/Colors';
+import React, {ReactNode} from 'react';
+import {Modal as ModalNative, StyleSheet, View} from 'react-native';
+import {COLORS} from '../constants/Colors';
 
 type Props = {
   animationType?: 'fade' | 'slide' | 'none';

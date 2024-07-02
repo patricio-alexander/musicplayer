@@ -1,13 +1,9 @@
 import {StyleSheet, View, ViewStyle} from 'react-native';
 import IconButton from './IconButton';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {COLORS} from '../constants/Colors';
 import TrackPlayer, {useIsPlaying} from 'react-native-track-player';
-import {
-  getActiveTrack,
-  getActiveTrackIndex,
-  skipToNext,
-} from 'react-native-track-player/lib/src/trackPlayer';
+import {getActiveTrack} from 'react-native-track-player/lib/src/trackPlayer';
 import {useQueueStore} from '../store/queueStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {playTrack} from '../../PlaybackService';
@@ -77,34 +73,80 @@ const PlayerControls: React.FC<Props> = ({style}) => {
     }
   };
 
+  const randomTrackInCustomPlayList = () => {
+    const playList = playLists[Number(playListId)];
+
+    const randomIndex = randomIdTrack({
+      max: playList.tracks.length,
+    });
+    const id = playList.tracks[randomIndex].id;
+    playTrack({id});
+  };
+
+  const skipPrevious = async () => {
+    const playList = playLists[Number(playListId)];
+
+    if (isRandom) {
+      if (playListId) {
+        randomTrackInCustomPlayList();
+        return;
+      }
+
+      const id = randomIdTrack({max: tracks.length});
+      playTrack({id});
+      return;
+    }
+
+    if (playListId) {
+      // Set provious track in the custom playlist
+
+      const activeTrack = await getActiveTrack();
+      const currentIndex = playLists[Number(playListId)].tracks.findIndex(
+        e => e.id === activeTrack?.id,
+      );
+
+      const previousIndexTrack =
+        currentIndex > 0 && currentIndex < playList.tracks.length
+          ? currentIndex - 1
+          : 0;
+
+      const idTrack = playList.tracks[previousIndexTrack]?.id;
+      TrackPlayer.skip(idTrack);
+
+      return;
+    }
+
+    TrackPlayer.skipToPrevious();
+  };
+
   const skipNext = async () => {
     const playList = playLists[Number(playListId)];
 
     if (isRandom) {
       if (playListId) {
-        const randomIndex = randomIdTrack({
-          max: playList.tracks.length,
-        });
-        const id = playList.tracks[randomIndex].id;
-        playTrack({id});
+        randomTrackInCustomPlayList();
         return;
       }
       const id = randomIdTrack({max: tracks.length});
       playTrack({id});
       return;
     }
+
     if (playListId) {
+      // Set next track in the custom playlist
       const activeTrack = await getActiveTrack();
       const currentIndex = playLists[Number(playListId)].tracks.findIndex(
         e => e.id === activeTrack?.id,
       );
-      const nexIndexTrack =
+      const nextIndexTrack =
         currentIndex !== -1 && currentIndex < playList.tracks.length - 1
           ? currentIndex + 1
           : null;
-      const idTrack = nexIndexTrack && playList.tracks[nexIndexTrack]?.id;
-      if (idTrack) playTrack({id: idTrack});
+      const idTrack = nextIndexTrack && playList.tracks[nextIndexTrack]?.id;
+      if (idTrack) TrackPlayer.skip(idTrack);
+      return;
     }
+    TrackPlayer.skipToNext();
   };
 
   useEffect(() => {
@@ -117,33 +159,31 @@ const PlayerControls: React.FC<Props> = ({style}) => {
         <IconButton
           name={isFavorite ? 'favorite' : 'favorite-outline'}
           size={20}
-          color={isFavorite ? COLORS.rising : COLORS.dark[100]}
+          color={isFavorite ? COLORS.rising : COLORS.dark[200]}
           onPress={markFavorite}
         />
         <IconButton
           name="skip-previous"
           size={40}
-          color={COLORS.dark[100]}
-          onPress={() => {
-            TrackPlayer.skipToPrevious();
-          }}
+          color={COLORS.dark[200]}
+          onPress={skipPrevious}
         />
         <IconButton
           name={playing ? 'play-arrow' : 'pause'}
           size={playing ? 50 : 50}
-          color={COLORS.dark[300]}
+          color={COLORS.dark[200]}
           onPress={playing ? TrackPlayer.pause : TrackPlayer.play}
         />
         <IconButton
           name="skip-next"
           size={40}
-          color={COLORS.dark[300]}
+          color={COLORS.dark[200]}
           onPress={skipNext}
         />
         <IconButton
           name={isRandom ? 'shuffle-on' : 'shuffle'}
           size={20}
-          color={isRandom ? COLORS.rising : COLORS.dark[300]}
+          color={isRandom ? COLORS.rising : COLORS.dark[200]}
           onPress={randomTracks}
         />
       </View>

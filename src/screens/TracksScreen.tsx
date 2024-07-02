@@ -1,18 +1,19 @@
-import {StyleSheet, View, PermissionsAndroid, FlatList} from 'react-native';
+import {StyleSheet, View, FlatList} from 'react-native';
 import {COLORS} from '../constants/Colors';
 import PlayListItem from '../components/PlayListItem';
 import {playTrack} from '../../PlaybackService';
 import {useQueueStore} from '../store/queueStore';
-import {TextInput} from 'react-native';
 import {useState} from 'react';
 import Input from '../components/Input';
 
-export default function Tracks() {
+const TracksScreen = () => {
   const tracks = useQueueStore(state => state.tracks);
   const [search, setSearch] = useState('');
   const filterTrack = tracks.filter(track =>
     track.title.toLowerCase().includes(search.toLowerCase()),
   );
+
+  const setPlayListId = useQueueStore(state => state.setPlayListId);
 
   return (
     <View style={style.container}>
@@ -30,13 +31,14 @@ export default function Tracks() {
             index={index}
             onPress={async () => {
               playTrack({id: item.id});
+              setPlayListId('');
             }}
           />
         )}
       />
     </View>
   );
-}
+};
 
 const style = StyleSheet.create({
   list: {
@@ -52,3 +54,5 @@ const style = StyleSheet.create({
     color: COLORS.dark[100],
   },
 });
+
+export default TracksScreen;

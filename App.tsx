@@ -6,7 +6,6 @@ import {
 import BottomTabs from './src/routes/BottomTabs';
 import React, {useEffect, useState} from 'react';
 import {PermissionsAndroid, StatusBar, useColorScheme} from 'react-native';
-
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {COLORS} from './src/constants/Colors';
 import {useQueueStore} from './src/store/queueStore';
@@ -26,6 +25,13 @@ import {Track} from './src/types/SongTypes';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Container from './src/components/Container';
 import Button from './src/components/Button';
+import {
+  getAll,
+  getAlbums,
+  searchSongs,
+  SortSongFields,
+  SortSongOrder,
+} from 'react-native-get-music-files';
 
 const requestAudioMusicPermissions = async () => {
   try {
@@ -44,6 +50,7 @@ function App(): React.JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
   const [isPlayerInitialized, setIsPlayerInitialized] =
     useState<boolean>(false);
   const setActiveSongId = useQueueStore(state => state.setActiveQueueId);
@@ -143,7 +150,25 @@ function App(): React.JSX.Element {
 
   const initizalizedSongs = async (dir: string) => {
     if (!isPlayerInitialized) await initizalizedPlayer();
-    const tracks = await getFilesFromDirectory({path: dir});
+    //const tracks = await getFilesFromDirectory({path: dir});
+    //setTracks(tracks);
+    //addSongsInTrackPlayer(tracks);
+    const songsOrError = await getAll({
+      limit: 100,
+      offset: 0,
+      coverQuality: 50,
+      minSongDuration: 1000,
+      sortBy: SortSongFields.TITLE,
+      sortOrder: SortSongOrder.DESC,
+    });
+
+    const arraysong = [...songsOrError];
+    const tracks = arraysong.map((file: any, i) => ({
+      id: i,
+      title: file?.title,
+      url: `file://${file?.url}`,
+      artwork: file?.cover ? file?.cover : null,
+    }));
     setTracks(tracks);
     addSongsInTrackPlayer(tracks);
   };

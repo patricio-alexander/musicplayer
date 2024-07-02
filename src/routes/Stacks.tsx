@@ -1,11 +1,11 @@
 import {COLORS} from '../constants/Colors';
-import Settings from '../screens/Settings';
-import PlayLists from '../screens/PlayLists';
+import SettingsScreen from '../screens/SettingsScreen';
+import PlayListsScreen from '../screens/PlayListsScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Favorite from '../screens/Favorite';
+import FavoriteScreen from '../screens/FavoriteScreen';
 import {RootStackParamList} from '../types/ScreenTypes';
-import Themes from '../screens/Themes';
-import CustomPlayList from '../screens/CustomPlayList';
+import ThemesScreen from '../screens/ThemesScreen';
+import CustomPlayListScreen from '../screens/CustomPlayListScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -13,22 +13,25 @@ const StackPlayLists = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: COLORS.dark[950],
+        },
       }}
       initialRouteName="PlayLists">
-      <Stack.Screen name="PlayLists" component={PlayLists} />
+      <Stack.Screen name="PlayLists" component={PlayListsScreen} />
       <Stack.Screen
         name="Favorites"
-        component={Favorite}
+        component={FavoriteScreen}
         options={{
           headerShown: true,
           headerTitle: 'Canciones favoritas',
           headerStyle: {
-            backgroundColor: COLORS.dark[900],
+            backgroundColor: COLORS.dark[950],
           },
         }}
       />
-      <Stack.Screen name="CustomPlayList" component={CustomPlayList} />
+      <Stack.Screen name="CustomPlayList" component={CustomPlayListScreen} />
     </Stack.Navigator>
   );
 };
@@ -39,8 +42,8 @@ const StackSettings = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Settings" component={Settings} />
-      <Stack.Screen name="Themes" component={Themes} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="Themes" component={ThemesScreen} />
     </Stack.Navigator>
   );
 };

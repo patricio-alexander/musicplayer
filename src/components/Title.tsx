@@ -1,15 +1,18 @@
-import { ReactNode } from 'react';
-import { StyleSheet, Text, ViewStyle } from 'react-native';
-import { COLORS } from '../constants/Colors';
+import {ReactNode} from 'react';
+import {StyleSheet, Text, ViewStyle} from 'react-native';
+import {COLORS} from '../constants/Colors';
 
 type Props = {
   children: ReactNode;
   size?: number;
   style?: ViewStyle;
+  [key: string]: any;
 };
-const Title: React.FC<Props> = ({ children, size, style }) => {
+const Title: React.FC<Props> = ({children, size, style, ...textProps}) => {
+  const textStyle = [styles.title, {fontSize: size ? size : 20}, style];
+
   return (
-    <Text style={[styles.title, { fontSize: size ? size : 20 }, style]}>
+    <Text style={textStyle} {...textProps}>
       {children}
     </Text>
   );
@@ -18,7 +21,7 @@ const Title: React.FC<Props> = ({ children, size, style }) => {
 const styles = StyleSheet.create({
   title: {
     fontWeight: '700',
-    color: COLORS.dark[300],
+    color: COLORS.dark[200],
     padding: 2,
   },
 });

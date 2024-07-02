@@ -12,27 +12,26 @@ import CheckBox from '@react-native-community/checkbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PlayList, Track} from '../types/SongTypes';
 import {playTrack} from '../../PlaybackService';
-import FlatListElement from '../components/FlatListElement';
+import ListItem from '../components/ListItem';
 import IconButton from '../components/IconButton';
 import {COLORS} from '../constants/Colors';
 
 type SelectedTrack = Track & {
   checked: boolean;
 };
-export default function CustomPlayList({
-  navigation,
-  route,
-}: CustomPlayListProps) {
+
+const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
   const {playListId} = route.params;
   const [visible, setVisible] = useState(false);
   const tracks = useQueueStore(state => state.tracks);
   const [search, setSearch] = useState('');
   const [checkedTracks, setCheckedTracks] = useState<Array<SelectedTrack>>([]);
   const playLists = useQueueStore(state => state.playLists);
-  const setPlayListId = useQueueStore(state => state.setPlayListId);
   const [visibleModalEdit, setVisibleModalEdit] = useState<boolean>(false);
   const [valueEditPlayList, setValueEditPlayList] = useState<string>('');
+  const [visibleOptions, setVisibleOptions] = useState<boolean>(false);
 
+  const setPlayListId = useQueueStore(state => state.setPlayListId);
   const setPlayLists = useQueueStore(state => state.setPlayLists);
 
   const onChangeCheckBox = ({id}: {id: number}) => {
@@ -57,14 +56,24 @@ export default function CustomPlayList({
     setPlayLists(updatePlayLists);
   };
 
+  const deletePlayList = async () => {
+    const localStorage = (await AsyncStorage.getItem('playLists')) ?? '';
+    const storagePlayLists = JSON.parse(localStorage);
+    storagePlayLists.splice(playListId, 1);
+    await AsyncStorage.setItem('playLists', JSON.stringify(storagePlayLists));
+    setPlayLists(storagePlayLists);
+    setPlayListId('');
+    navigation.goBack();
+  };
+
   const saveNewNamePlayList = async () => {
     const updatePlayLists = playLists.map((playList: PlayList, i: number) =>
       i === playListId ? {...playList, name: valueEditPlayList} : playList,
     );
     const localStorage = (await AsyncStorage.getItem('playLists')) ?? '';
-    const arrayPlayLists = JSON.parse(localStorage);
-    arrayPlayLists[playListId].name = valueEditPlayList;
-    await AsyncStorage.setItem('playLists', JSON.stringify(arrayPlayLists));
+    const storagePlayLists = JSON.parse(localStorage);
+    storagePlayLists[playListId].name = valueEditPlayList;
+    await AsyncStorage.setItem('playLists', JSON.stringify(storagePlayLists));
     setPlayLists(updatePlayLists);
   };
 
@@ -96,8 +105,13 @@ export default function CustomPlayList({
   };
 
   useEffect(() => {
-    setPlayListId(playListId.toString());
-  }, []);
+    navigation.setOptions({
+      title: playLists[playListId]?.name,
+      headerRight: () => (
+        <IconButton name="menu" onPress={() => setVisibleOptions(true)} />
+      ),
+    });
+  }, [navigation, playLists]);
 
   return (
     <Container>
@@ -118,7 +132,7 @@ export default function CustomPlayList({
           style={styles.flatList}
           data={checkedTracks}
           renderItem={({item, index}) => (
-            <FlatListElement onPress={() => onChangeCheckBox({id: index})}>
+            <ListItem onPress={() => onChangeCheckBox({id: index})}>
               <CheckBox
                 style={styles.checkBox}
                 value={item.checked}
@@ -127,7 +141,7 @@ export default function CustomPlayList({
               <Text numberOfLines={1} ellipsizeMode="tail" style={styles.text}>
                 {item.title}
               </Text>
-            </FlatListElement>
+            </ListItem>
           )}
         />
         <Button
@@ -172,47 +186,50 @@ export default function CustomPlayList({
         </View>
       </Modal>
 
-      <View style={styles.box}>
-        <IconButton
-          name="arrow-back"
-          size={22}
-          onPress={() => navigation.goBack()}
-          style={styles.iconButton}
-        />
-        <View
-          style={{
-            alignItems: 'center',
-            flexDirection: 'row',
-          }}>
-          <IconButton name="edit" onPress={() => setVisibleModalEdit(true)} />
-          <Title style={{marginRight: 10}}>
-            {playLists?.[playListId]?.name}
-          </Title>
-        </View>
-      </View>
-      <Button
-        title="Agregar canciones"
-        variant="text"
-        onPress={() => {
-          setVisible(true);
-          loadTracksInModal();
-        }}
-      />
+      <Modal
+        visible={visibleOptions}
+        animationType="fade"
+        transparent={true}
+        statusBarTranslucent={true}
+        onRequestClose={() => setVisibleOptions(false)}>
+        <ListItem
+          onPress={() => {
+            setVisible(true);
+            loadTracksInModal();
+          }}
+          icon="add">
+          <Text style={styles.text}>Agregar canciones</Text>
+        </ListItem>
+        <ListItem
+          onPress={() => {
+            setVisibleModalEdit(true);
+          }}
+          icon="edit-note">
+          <Text style={styles.text}>Editar nombre de playlist</Text>
+        </ListItem>
+        <ListItem onPress={deletePlayList} icon="delete">
+          <Text style={styles.text}>Eliminar playlist</Text>
+        </ListItem>
+      </Modal>
+
       <View style={{height: '90%'}}>
         <FlatList
-          data={playLists[playListId].tracks}
+          data={playLists[playListId]?.tracks}
           renderItem={({item, index}) => (
             <PlayListItem
               track={item}
               index={index}
-              onPress={() => playTrack({id: item.id})}
+              onPress={() => {
+                playTrack({id: item.id});
+                setPlayListId(playListId.toString());
+              }}
             />
           )}
         />
       </View>
     </Container>
   );
-}
+};
 
 const styles = StyleSheet.create({
   text: {
@@ -232,11 +249,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.dark[900],
     padding: 5,
   },
-  box: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
   flatList: {height: '70%', paddingVertical: 3},
 });
+
+export default CustomPlayListScreen;

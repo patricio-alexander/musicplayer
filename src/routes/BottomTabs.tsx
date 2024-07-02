@@ -1,8 +1,8 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {COLORS} from '../constants/Colors';
-import Tracks from '../screens/Tracks';
+import TracksScreen from '../screens/TracksScreen';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Player from '../screens/Player';
+import Player from '../screens/PlayerScreen';
 import {StackPlayLists, StackSettings} from './Stacks';
 type TabBarIcon = {
   color: string;
@@ -35,10 +35,9 @@ const BottomTabs = () => {
       }}>
       <Tab.Screen
         name="Songs"
-        component={Tracks}
+        component={TracksScreen}
         options={{
           title: 'Canciones',
-
           tabBarIcon: ({color}: TabBarIcon) => (
             <Icon name="library-music" size={28} color={color} />
           ),
