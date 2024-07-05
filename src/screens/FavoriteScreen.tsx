@@ -1,14 +1,11 @@
-import {FlatList, StyleSheet} from 'react-native';
+import {FlatList} from 'react-native';
 import {useQueueStore} from '../store/queueStore';
 import PlayListItem from '../components/PlayListItem';
 import {playTrack} from '../../PlaybackService';
 import Container from '../components/Container';
-import Title from '../components/Title';
-import IconButton from '../components/IconButton';
 import {FavoriteScreenProps} from '../types/ScreenTypes';
-import {useEffect} from 'react';
 
-const FavoriteScreen = ({navigation}: FavoriteScreenProps) => {
+const FavoriteScreen = () => {
   const tracks = useQueueStore(state => state.tracks);
   const favoriteSongs = useQueueStore(state => state.favorites);
 

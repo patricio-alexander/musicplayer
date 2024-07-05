@@ -87,6 +87,7 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
           id: value.id,
           url: value.url,
           checked: false,
+          artwork: value.artwork,
         }));
 
         setCheckedTracks(selectedTracks);

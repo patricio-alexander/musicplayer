@@ -1,56 +1,56 @@
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View, Image, Dimensions, StatusBar} from 'react-native';
 import {COLORS} from '../constants/Colors';
 import {useQueueStore} from '../store/queueStore';
 import ProgressBar from '../components/ProgressBar';
 import PlayerControls from '../components/PlayerControls';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Container from '../components/Container';
 import Title from '../components/Title';
-import {useEffect, useState} from 'react';
-import {useTrackPlayerEvents, Event} from 'react-native-track-player';
 import LinearGradient from 'react-native-linear-gradient';
-import ImageColors from 'react-native-image-colors';
+import {usePlayerBackgrounGradient} from '../hooks/usePlayerBackgroundGradient';
+import {useIsFocused} from '@react-navigation/native';
+import Container from '../components/Container';
 
 const PlayerScreen = () => {
-  const songTitle = useQueueStore(state => state.songTitle);
-  const [artwork, setArtWork] = useState<string>();
-  const [colors, setColors] = useState({});
+  const track = useQueueStore(state => state.track);
+  const img =
+    typeof track.artwork === 'object'
+      ? track.artwork.uri
+      : Image.resolveAssetSource(track.artwork).uri;
 
-  useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async event => {
-    setArtWork(event?.track?.artwork ?? '');
-  });
-
+  const {gradient} = usePlayerBackgrounGradient(img);
+  const isFocused = useIsFocused();
   return (
-    <Container style={style.wrapper}>
-      <View style={style.container}>
+    <Container>
+      {isFocused && (
+        <StatusBar
+          backgroundColor={gradient ? gradient?.average : COLORS.dark[900]}
+        />
+      )}
+      <LinearGradient
+        style={{flex: 1}}
+        colors={
+          gradient
+            ? [gradient?.average, gradient?.dominant]
+            : [COLORS.dark[900], COLORS.dark[950]]
+        }>
         <View style={style.wrapperIcon}>
-          {artwork ? (
-            <Image
-              source={{uri: artwork}}
-              style={{
-                width: '100%',
-                height: '50%',
-                resizeMode: 'cover',
-                borderRadius: 6,
-                borderWidth: 1,
-                borderColor: COLORS.dark[200],
-              }}
-            />
-          ) : (
-            <Icon name="music-note" size={90} />
-          )}
+          <Image
+            source={track?.artwork}
+            style={{
+              width: '100%',
+              height: '50%',
+              resizeMode: 'cover',
+              shadowColor: '#000',
+              borderRadius: 10,
+            }}
+          />
         </View>
 
-        <View style={{height: '40%'}}>
-          <View style={style.songBox}>
-            <Title style={style.title} numberOfLines={2} ellipsizeMode="tail">
-              {songTitle}
-            </Title>
-          </View>
-          <ProgressBar />
-          <PlayerControls style={{marginTop: 40}} />
-        </View>
-      </View>
+        <Title style={style.title} numberOfLines={2} ellipsizeMode="tail">
+          {track.title}
+        </Title>
+        <ProgressBar />
+        <PlayerControls style={{marginTop: 40}} />
+      </LinearGradient>
     </Container>
   );
 };
@@ -66,24 +66,15 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 10,
     height: '60%',
+    padding: 30,
   },
 
-  container: {
-    justifyContent: 'space-between',
-    height: '80%',
-  },
   title: {
     fontSize: 20,
     textAlign: 'center',
     fontWeight: '700',
     width: '100%',
-    color: COLORS.dark[300],
-  },
-  songBox: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: '20%',
+    color: COLORS.chardonnay[200],
   },
 });
 

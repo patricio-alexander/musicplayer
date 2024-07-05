@@ -1,6 +1,12 @@
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
+  Splash: undefined;
+  Permission: undefined;
+  Tabs: undefined;
+};
+
+export type StackParamList = {
   PlayLists: undefined;
   Favorites: undefined;
   Settings: undefined;
@@ -9,19 +15,29 @@ export type RootStackParamList = {
 };
 
 export type PlayListScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  StackParamList,
   'PlayLists'
 >;
 export type FavoriteScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  StackParamList,
   'Favorites'
 >;
 export type SettingsScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  StackParamList,
   'Settings'
 >;
 
 export type CustomPlayListProps = NativeStackScreenProps<
-  RootStackParamList,
+  StackParamList,
   'CustomPlayList'
+>;
+
+export type WelcomeScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Permission'
+>;
+
+export type TabsScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Tabs'
 >;

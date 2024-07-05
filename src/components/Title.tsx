@@ -21,7 +21,7 @@ const Title: React.FC<Props> = ({children, size, style, ...textProps}) => {
 const styles = StyleSheet.create({
   title: {
     fontWeight: '700',
-    color: COLORS.dark[200],
+    color: COLORS.chardonnay[200],
     padding: 2,
   },
 });

@@ -43,7 +43,9 @@ const styles = StyleSheet.create({
   modalBody: {
     width: '85%',
     height: 'auto',
-    backgroundColor: COLORS.dark[900],
+    backgroundColor: COLORS.dark[950],
+    borderWidth: 1,
+    borderColor: COLORS.dark[100],
     borderRadius: 20,
     padding: 25,
     shadowColor: '#000',

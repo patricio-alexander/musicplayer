@@ -1,29 +1,17 @@
-import {StyleSheet, View, FlatList} from 'react-native';
+import {StyleSheet, View, FlatList, StatusBar} from 'react-native';
 import {COLORS} from '../constants/Colors';
 import PlayListItem from '../components/PlayListItem';
 import {playTrack} from '../../PlaybackService';
 import {useQueueStore} from '../store/queueStore';
-import {useState} from 'react';
-import Input from '../components/Input';
 
 const TracksScreen = () => {
   const tracks = useQueueStore(state => state.tracks);
-  const [search, setSearch] = useState('');
-  const filterTrack = tracks.filter(track =>
-    track.title.toLowerCase().includes(search.toLowerCase()),
-  );
-
   const setPlayListId = useQueueStore(state => state.setPlayListId);
 
   return (
     <View style={style.container}>
-      <Input
-        placeholder="Buscar canción"
-        onChangeText={setSearch}
-        value={search}
-      />
       <FlatList
-        data={filterTrack}
+        data={tracks}
         contentContainerStyle={style.list}
         renderItem={({item, index}) => (
           <PlayListItem

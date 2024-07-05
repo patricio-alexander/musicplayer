@@ -1,6 +1,6 @@
-import { Text, Pressable, Animated, StyleSheet, ViewStyle } from 'react-native';
-import { COLORS } from '../constants/Colors';
-import React, { useRef } from 'react';
+import {Text, Pressable, Animated, StyleSheet, ViewStyle} from 'react-native';
+import {COLORS} from '../constants/Colors';
+import React, {useRef} from 'react';
 type Variant = 'contained' | 'outlined' | 'text';
 
 type Props = {
@@ -22,11 +22,11 @@ const Button: React.FC<Props> = ({
 
   const variants = {
     contained: {
-      backgroundColor: COLORS.chardonnay[300],
+      backgroundColor: COLORS.chardonnay[200],
     },
     outlined: {
       borderWidth: 1,
-      borderColor: COLORS.chardonnay[300],
+      borderColor: COLORS.chardonnay[200],
     },
     text: {
       backgroundColor: 'transparent',
@@ -35,14 +35,14 @@ const Button: React.FC<Props> = ({
 
   const variantText = {
     contained: {
-      color: COLORS.chardonnay[950],
+      color: COLORS.dark[950],
     },
 
     outlined: {
-      color: COLORS.chardonnay[300],
+      color: COLORS.chardonnay[200],
     },
     text: {
-      color: COLORS.chardonnay[300],
+      color: COLORS.chardonnay[200],
     },
   };
 
@@ -61,7 +61,7 @@ const Button: React.FC<Props> = ({
   };
 
   return (
-    <Animated.View style={{ transform: [{ scale: scaleValue }] }}>
+    <Animated.View style={{transform: [{scale: scaleValue}]}}>
       <Pressable
         onPress={onPress}
         onPressIn={animatedOnPressIn}
@@ -80,15 +80,15 @@ const Button: React.FC<Props> = ({
           style,
           disabled
             ? variant !== 'text'
-              ? { backgroundColor: COLORS.dark[800] }
-              : { backgroundColor: 'transparent' }
+              ? {backgroundColor: COLORS.chardonnay[800]}
+              : {backgroundColor: 'transparent'}
             : variants[variant ?? 'contained'],
         ]}>
         <Text
           style={[
             styles.text,
             disabled
-              ? { color: COLORS.dark[400] }
+              ? {color: COLORS.chardonnay[800]}
               : variantText[variant ?? 'contained'],
           ]}>
           {title}

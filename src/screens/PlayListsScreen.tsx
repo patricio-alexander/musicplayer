@@ -1,7 +1,6 @@
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import Container from '../components/Container';
 import {COLORS} from '../constants/Colors';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Button from '../components/Button';
 import {useQueueStore} from '../store/queueStore';
 
@@ -65,13 +64,9 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
           onPress={() => setVisible(true)}
         />
 
-        <BoxPlayList onPress={() => navigation.navigate('Favorites')}>
-          <Icon
-            name="heart"
-            style={{marginLeft: 10}}
-            size={20}
-            color={COLORS.chardonnay[300]}
-          />
+        <BoxPlayList
+          icon="heart"
+          onPress={() => navigation.navigate('Favorites')}>
           <Text style={style.title}>Canciones favoritas</Text>
           <Text style={style.badge}>{favorites.length}</Text>
         </BoxPlayList>
@@ -80,15 +75,10 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
           renderItem={({item, index}) => (
             <BoxPlayList
               key={index}
+              icon="music"
               onPress={() =>
                 navigation.navigate('CustomPlayList', {playListId: index})
               }>
-              <Icon
-                name="book-music-outline"
-                style={{marginLeft: 10}}
-                size={30}
-                color={COLORS.chardonnay[300]}
-              />
               <Text style={style.title}>{item.name}</Text>
               <Text style={style.badge}>{item.tracks?.length}</Text>
             </BoxPlayList>
@@ -122,7 +112,7 @@ const style = StyleSheet.create({
     padding: 5,
     borderRadius: 100,
     position: 'absolute',
-    color: COLORS.rising,
+    color: COLORS.chardonnay[300],
     top: 5,
     right: 10,
   },

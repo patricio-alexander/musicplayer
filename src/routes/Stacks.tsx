@@ -3,11 +3,11 @@ import SettingsScreen from '../screens/SettingsScreen';
 import PlayListsScreen from '../screens/PlayListsScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import FavoriteScreen from '../screens/FavoriteScreen';
-import {RootStackParamList} from '../types/ScreenTypes';
+import {StackParamList} from '../types/ScreenTypes';
 import ThemesScreen from '../screens/ThemesScreen';
 import CustomPlayListScreen from '../screens/CustomPlayListScreen';
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<StackParamList>();
 
 const StackPlayLists = () => {
   return (
@@ -40,9 +40,16 @@ const StackSettings = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerStyle: {
+          backgroundColor: COLORS.dark[950],
+        },
       }}>
-      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen
+        name="Settings"
+        options={{headerTitle: 'Ajustes'}}
+        component={SettingsScreen}
+      />
+
       <Stack.Screen name="Themes" component={ThemesScreen} />
     </Stack.Navigator>
   );

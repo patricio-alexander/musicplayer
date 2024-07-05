@@ -12,9 +12,18 @@ const ProgressBar: React.FC = () => {
 
   return (
     <View style={{width: '100%'}}>
+      <View
+        style={{
+          justifyContent: 'space-between',
+          flexDirection: 'row',
+          alignItems: 'baseline',
+          marginHorizontal: 15,
+        }}>
+        <Text style={{color: COLORS.dark[200]}}>{currentTimeSong}</Text>
+        <Text style={{color: COLORS.dark[200]}}>{durationTimeSong}</Text>
+      </View>
       <Slider
         value={position / duration}
-        style={{marginTop: 30}}
         minimumValue={0}
         maximumValue={1}
         minimumTrackTintColor={COLORS.rising}
@@ -22,15 +31,6 @@ const ProgressBar: React.FC = () => {
         thumbTintColor={COLORS.rising}
         onValueChange={value => TrackPlayer.seekTo(value * duration)}
       />
-      <View
-        style={{
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-          alignItems: 'baseline',
-        }}>
-        <Text style={{color: COLORS.dark[200]}}>{currentTimeSong}</Text>
-        <Text style={{color: COLORS.dark[200]}}>{durationTimeSong}</Text>
-      </View>
     </View>
   );
 };
