@@ -1,6 +1,6 @@
 import {ReactNode} from 'react';
 import {StyleSheet, Text, ViewStyle} from 'react-native';
-import {COLORS} from '../constants/Colors';
+import {useThemeStore} from '../store/themeStore';
 
 type Props = {
   children: ReactNode;
@@ -9,7 +9,15 @@ type Props = {
   [key: string]: any;
 };
 const Title: React.FC<Props> = ({children, size, style, ...textProps}) => {
-  const textStyle = [styles.title, {fontSize: size ? size : 20}, style];
+  const {theme} = useThemeStore();
+  const textStyle = [
+    styles.title,
+    {
+      color: theme.primary,
+    },
+    {fontSize: size ? size : 20},
+    style,
+  ];
 
   return (
     <Text style={textStyle} {...textProps}>
@@ -21,7 +29,6 @@ const Title: React.FC<Props> = ({children, size, style, ...textProps}) => {
 const styles = StyleSheet.create({
   title: {
     fontWeight: '700',
-    color: COLORS.chardonnay[200],
     padding: 2,
   },
 });

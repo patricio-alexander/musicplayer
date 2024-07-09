@@ -1,6 +1,6 @@
 import {StyleSheet, View, ViewStyle} from 'react-native';
 import React from 'react';
-import {COLORS} from '../constants/Colors';
+import {useThemeStore} from '../store/themeStore';
 
 type Props = {
   style?: ViewStyle;
@@ -8,13 +8,24 @@ type Props = {
 };
 
 const Container: React.FC<Props> = ({children, style}) => {
-  return <View style={[styles.container, style]}>{children}</View>;
+  const theme = useThemeStore();
+  return (
+    <View
+      style={[
+        styles.container,
+        style,
+        {
+          backgroundColor: theme.theme.background,
+        },
+      ]}>
+      {children}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
   container: {
     height: '100%',
-    backgroundColor: COLORS.dark[950],
   },
 });
 

@@ -1,9 +1,9 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {COLORS} from '../constants/Colors';
 import TracksScreen from '../screens/TracksScreen';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Player from '../screens/PlayerScreen';
 import {StackPlayLists, StackSettings} from './Stacks';
+import {useThemeStore} from '../store/themeStore';
 type TabBarIcon = {
   color: string;
   focused: boolean;
@@ -11,19 +11,19 @@ type TabBarIcon = {
 
 const Tab = createBottomTabNavigator();
 const BottomTabs = () => {
+  const {theme} = useThemeStore();
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: COLORS.rising,
-        tabBarInactiveTintColor: COLORS.chardonnay[300],
+        tabBarActiveTintColor: theme.primary,
+        tabBarInactiveTintColor: theme.secondary,
         headerShown: false,
 
         tabBarStyle: {
-          backgroundColor: COLORS.dark[950],
+          backgroundColor: theme.background,
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           position: 'absolute',
-          borderColor: COLORS.dark[900],
           paddingBottom: 5,
           paddingTop: 3,
           height: 55,

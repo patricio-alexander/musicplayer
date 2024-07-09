@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react';
 import {Modal as ModalNative, StyleSheet, View} from 'react-native';
-import {COLORS} from '../constants/Colors';
+import {useThemeStore} from '../store/themeStore';
 
 type Props = {
   animationType?: 'fade' | 'slide' | 'none';
@@ -19,6 +19,8 @@ const Modal: React.FC<Props> = ({
   onRequestClose,
   children,
 }) => {
+  const {theme} = useThemeStore();
+
   return (
     <ModalNative
       animationType={animationType}
@@ -27,7 +29,16 @@ const Modal: React.FC<Props> = ({
       statusBarTranslucent={statusBarTranslucent}
       onRequestClose={onRequestClose}>
       <View style={styles.container}>
-        <View style={styles.modalBody}>{children}</View>
+        <View
+          style={[
+            styles.modalBody,
+            {
+              backgroundColor: theme.background,
+              borderColor: theme.primary,
+            },
+          ]}>
+          {children}
+        </View>
       </View>
     </ModalNative>
   );
@@ -43,9 +54,7 @@ const styles = StyleSheet.create({
   modalBody: {
     width: '85%',
     height: 'auto',
-    backgroundColor: COLORS.dark[950],
     borderWidth: 1,
-    borderColor: COLORS.dark[100],
     borderRadius: 20,
     padding: 25,
     shadowColor: '#000',

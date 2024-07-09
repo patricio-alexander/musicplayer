@@ -3,26 +3,37 @@ import {useQueueStore} from '../store/queueStore';
 import PlayListItem from '../components/PlayListItem';
 import {playTrack} from '../../PlaybackService';
 import Container from '../components/Container';
-import {FavoriteScreenProps} from '../types/ScreenTypes';
+import {useState} from 'react';
+import {Track} from '../types/SongTypes';
+import TrackOptionsModal from '../components/TrackOptionsModal';
 
 const FavoriteScreen = () => {
-  const tracks = useQueueStore(state => state.tracks);
-  const favoriteSongs = useQueueStore(state => state.favorites);
-
-  const songsFavorites = tracks.filter(track =>
-    favoriteSongs.includes(track?.id),
-  );
+  const {favorites, tracks} = useQueueStore();
+  const [trackSelected, setTrackSelected] = useState<Track | null>(null);
+  const [visible, setVisible] = useState<boolean>(false);
 
   return (
     <Container>
+      <TrackOptionsModal
+        visible={visible}
+        onRequestClose={() => setVisible(false)}
+        track={trackSelected}
+      />
       <FlatList
         style={{marginTop: 10}}
-        data={songsFavorites}
+        data={favorites}
         renderItem={({item, index}) => (
           <PlayListItem
             track={item}
-            index={index}
-            onPress={() => playTrack({id: item.id})}
+            onPress={() => {
+              const id = tracks.findIndex(track => track.url === item.url);
+
+              playTrack({id});
+            }}
+            onPressIcon={() => {
+              setTrackSelected(item);
+              setVisible(true);
+            }}
           />
         )}
       />

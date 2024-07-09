@@ -14,7 +14,7 @@ import {PlayList, Track} from '../types/SongTypes';
 import {playTrack} from '../../PlaybackService';
 import ListItem from '../components/ListItem';
 import IconButton from '../components/IconButton';
-import {COLORS} from '../constants/Colors';
+import TrackOptionsModal from '../components/TrackOptionsModal';
 
 type SelectedTrack = Track & {
   checked: boolean;
@@ -30,22 +30,26 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
   const [visibleModalEdit, setVisibleModalEdit] = useState<boolean>(false);
   const [valueEditPlayList, setValueEditPlayList] = useState<string>('');
   const [visibleOptions, setVisibleOptions] = useState<boolean>(false);
+  const [visibleTracksOptions, setVisibleTracksOptions] =
+    useState<boolean>(false);
+  const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
 
-  const setPlayListId = useQueueStore(state => state.setPlayListId);
-  const setPlayLists = useQueueStore(state => state.setPlayLists);
+  const {setPlayLists, setPlayListId} = useQueueStore();
 
-  const onChangeCheckBox = ({id}: {id: number}) => {
+  const onChangeCheckBox = ({url}: {url: string}) => {
     const newSelectedTracks = checkedTracks.map(track => {
-      if (track.id === id) {
+      if (track.url === url) {
         return {...track, checked: !track.checked};
       }
       return track;
     });
+
     setCheckedTracks(newSelectedTracks);
   };
 
   const addTracksSelected = async () => {
     const tracksChecked = checkedTracks.filter(track => track.checked);
+
     const localStorage = (await AsyncStorage.getItem('playLists')) ?? '';
     const arrayPlayLists = JSON.parse(localStorage);
     arrayPlayLists[playListId].tracks = tracksChecked;
@@ -84,7 +88,6 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
       if (!localStorage) {
         const selectedTracks = tracks.map(value => ({
           title: value.title,
-          id: value.id,
           url: value.url,
           checked: false,
           artwork: value.artwork,
@@ -95,10 +98,15 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
       }
 
       const currentPlayListTracks = JSON.parse(localStorage)[playListId].tracks;
-      const selectedTracks = tracks.map((track: Track, index: number) => ({
-        ...track,
-        checked: currentPlayListTracks[index]?.checked ?? false,
-      }));
+      const selecteds = currentPlayListTracks.map((track: Track) => track.url);
+
+      const selectedTracks = tracks.map((track: Track, index: number) => {
+        return {
+          ...track,
+          checked: selecteds.includes(track.url),
+        };
+      });
+
       setCheckedTracks(selectedTracks);
     } catch (error) {
       console.log(error);
@@ -132,12 +140,12 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
         <FlatList
           style={styles.flatList}
           data={checkedTracks}
-          renderItem={({item, index}) => (
-            <ListItem onPress={() => onChangeCheckBox({id: index})}>
+          renderItem={({item}) => (
+            <ListItem onPress={() => onChangeCheckBox({url: item.url})}>
               <CheckBox
                 style={styles.checkBox}
                 value={item.checked}
-                onValueChange={() => onChangeCheckBox({id: index})}
+                onValueChange={() => onChangeCheckBox({url: item.url})}
               />
               <Text numberOfLines={1} ellipsizeMode="tail" style={styles.text}>
                 {item.title}
@@ -213,16 +221,26 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
         </ListItem>
       </Modal>
 
+      <TrackOptionsModal
+        visible={visibleTracksOptions}
+        track={selectedTrack}
+        onRequestClose={() => setVisibleTracksOptions(false)}
+      />
+
       <View style={{height: '90%'}}>
         <FlatList
           data={playLists[playListId]?.tracks}
-          renderItem={({item, index}) => (
+          renderItem={({item}) => (
             <PlayListItem
               track={item}
-              index={index}
               onPress={() => {
-                playTrack({id: item.id});
+                const id = tracks.findIndex(track => track.url === item.url);
+                playTrack({id});
                 setPlayListId(playListId.toString());
+              }}
+              onPressIcon={() => {
+                setSelectedTrack(item);
+                setVisibleTracksOptions(true);
               }}
             />
           )}
@@ -236,7 +254,6 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: '500',
     fontSize: 17,
-    overflow: 'hidden',
   },
   checkBox: {
     marginHorizontal: 5,
@@ -244,12 +261,7 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 10,
   },
-  iconButton: {
-    marginVertical: 10,
-    marginHorizontal: 20,
-    backgroundColor: COLORS.dark[900],
-    padding: 5,
-  },
+
   flatList: {height: '70%', paddingVertical: 3},
 });
 

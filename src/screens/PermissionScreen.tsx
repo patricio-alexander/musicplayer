@@ -1,5 +1,4 @@
 import {PermissionsAndroid} from 'react-native';
-import {WelcomeScreenProps} from '../types/ScreenTypes';
 import Container from '../components/Container';
 import Button from '../components/Button';
 import {useAccess} from '../store/accessStore';
@@ -8,7 +7,7 @@ import {tracksFromDevice} from '../helpers/tracksFromDevice';
 import TrackPlayer from 'react-native-track-player';
 import {initizalizedPlayer} from '../../PlaybackService';
 
-const WelcomeScreen = ({navigation}: WelcomeScreenProps) => {
+const WelcomeScreen = () => {
   const setAccess = useAccess(state => state.setAccess);
   const setTracks = useQueueStore(state => state.setTracks);
 
@@ -21,7 +20,7 @@ const WelcomeScreen = ({navigation}: WelcomeScreenProps) => {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         const init = await initizalizedPlayer();
         if (init) {
-          const tracks = await tracksFromDevice();
+          const tracks = await tracksFromDevice({offset: 0});
           setTracks(tracks);
           await TrackPlayer.add(tracks);
 

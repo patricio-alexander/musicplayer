@@ -1,9 +1,7 @@
 import {TouchableOpacity, Text, StyleSheet} from 'react-native';
-import {COLORS} from '../constants/Colors';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useDirectoryStore} from '../store/directoryStore';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
+import {useThemeStore} from '../store/themeStore';
 
 type Props = {
   title: string;
@@ -12,13 +10,22 @@ type Props = {
 };
 
 const SettingItem: React.FC<Props> = ({title, onPress, iconName}) => {
+  const {theme} = useThemeStore();
   return (
     <TouchableOpacity
       style={[style.boxDirectory]}
       activeOpacity={0.75}
       onPress={onPress}>
-      <Icon name={iconName} size={25} color={COLORS.dark[300]} />
-      <Text style={[style.text]}>{title}</Text>
+      <Icon name={iconName} size={25} color={theme.primary} />
+      <Text
+        style={[
+          style.text,
+          {
+            color: theme.primary,
+          },
+        ]}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -33,7 +40,6 @@ const style = StyleSheet.create({
   text: {
     fontSize: 20,
     marginLeft: 5,
-    color: COLORS.dark[300],
   },
 });
 

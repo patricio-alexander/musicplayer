@@ -1,16 +1,16 @@
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import Container from '../components/Container';
-import {COLORS} from '../constants/Colors';
 import Button from '../components/Button';
 import {useQueueStore} from '../store/queueStore';
 
 import type {PlayListScreenProps} from '../types/ScreenTypes';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Input from '../components/Input';
 import BoxPlayList from '../components/BoxPlayList';
 import Modal from '../components/Modal';
 import Title from '../components/Title';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useThemeStore} from '../store/themeStore';
 
 const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
   const favorites = useQueueStore(state => state.favorites);
@@ -18,6 +18,7 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
   const [namePlayList, setNamePlayList] = useState('');
   const playLists = useQueueStore(state => state.playLists);
   const setPlayLists = useQueueStore(state => state.setPlayLists);
+  const {theme} = useThemeStore();
 
   const addPlayList = async () => {
     const data = {
@@ -67,8 +68,16 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
         <BoxPlayList
           icon="heart"
           onPress={() => navigation.navigate('Favorites')}>
-          <Text style={style.title}>Canciones favoritas</Text>
-          <Text style={style.badge}>{favorites.length}</Text>
+          <Title>Canciones favoritas</Title>
+          <Text
+            style={[
+              style.badge,
+              {
+                color: theme.primary,
+              },
+            ]}>
+            {favorites.length}
+          </Text>
         </BoxPlayList>
         <FlatList
           data={playLists}
@@ -79,8 +88,16 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
               onPress={() =>
                 navigation.navigate('CustomPlayList', {playListId: index})
               }>
-              <Text style={style.title}>{item.name}</Text>
-              <Text style={style.badge}>{item.tracks?.length}</Text>
+              <Title>{item.name}</Title>
+              <Text
+                style={[
+                  style.badge,
+                  {
+                    color: theme.primary,
+                  },
+                ]}>
+                {item.tracks?.length}
+              </Text>
             </BoxPlayList>
           )}
         />
@@ -90,29 +107,11 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
 };
 
 const style = StyleSheet.create({
-  playListContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    height: 100,
-    margin: 30,
-    borderRadius: 10,
-    borderWidth: 0.5,
-    borderColor: COLORS.chardonnay[300],
-    position: 'relative',
-  },
-  title: {
-    marginVertical: 10,
-    marginHorizontal: 10,
-    fontSize: 20,
-    fontWeight: '600',
-    color: COLORS.chardonnay[300],
-  },
   badge: {
     fontSize: 15,
     padding: 5,
     borderRadius: 100,
     position: 'absolute',
-    color: COLORS.chardonnay[300],
     top: 5,
     right: 10,
   },

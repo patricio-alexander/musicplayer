@@ -1,6 +1,13 @@
-import {Text, Pressable, Animated, StyleSheet, ViewStyle} from 'react-native';
-import {COLORS} from '../constants/Colors';
+import {
+  Text,
+  Pressable,
+  Animated,
+  StyleSheet,
+  ViewStyle,
+  Platform,
+} from 'react-native';
 import React, {useRef} from 'react';
+import {useThemeStore} from '../store/themeStore';
 type Variant = 'contained' | 'outlined' | 'text';
 
 type Props = {
@@ -18,83 +25,68 @@ const Button: React.FC<Props> = ({
   variant,
   disabled,
 }) => {
+  const {theme} = useThemeStore();
   const scaleValue = useRef(new Animated.Value(1)).current;
 
-  const variants = {
-    contained: {
-      backgroundColor: COLORS.chardonnay[200],
-    },
-    outlined: {
-      borderWidth: 1,
-      borderColor: COLORS.chardonnay[200],
-    },
-    text: {
-      backgroundColor: 'transparent',
-    },
+  const variants = (pressed: boolean, variant: Variant) => {
+    const v = {
+      contained: {
+        backgroundColor: !pressed ? theme.primaryContainer : theme.secondary,
+      },
+      outlined: {
+        borderWidth: 1,
+        borderColor: !pressed ? theme.primaryContainer : theme.secondary,
+      },
+      text: {
+        backgroundColor: 'transparent',
+      },
+    };
+    return v[variant];
   };
 
-  const variantText = {
-    contained: {
-      color: COLORS.dark[950],
-    },
+  const variantText = (pressed: boolean, variant: Variant) => {
+    const v = {
+      contained: {
+        color: theme.background,
+      },
 
-    outlined: {
-      color: COLORS.chardonnay[200],
-    },
-    text: {
-      color: COLORS.chardonnay[200],
-    },
-  };
+      outlined: {
+        color: !pressed ? theme.primary : theme.secondary,
+      },
+      text: {
+        color: theme.primary,
+      },
+    };
 
-  const animatedOnPressIn = () => {
-    Animated.spring(scaleValue, {
-      toValue: 0.98,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const animatedOnPressOut = () => {
-    Animated.spring(scaleValue, {
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
+    return v[variant];
   };
 
   return (
-    <Animated.View style={{transform: [{scale: scaleValue}]}}>
-      <Pressable
-        onPress={onPress}
-        onPressIn={animatedOnPressIn}
-        onPressOut={animatedOnPressOut}
-        disabled={disabled}
-        style={() => [
-          {
-            paddingHorizontal: 5,
-            paddingVertical: 10,
-            borderRadius: 5,
-            margin: 10,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          style,
-          disabled
-            ? variant !== 'text'
-              ? {backgroundColor: COLORS.chardonnay[800]}
-              : {backgroundColor: 'transparent'}
-            : variants[variant ?? 'contained'],
-        ]}>
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={({pressed}) => [
+        styles.button,
+        style,
+
+        disabled
+          ? variant !== 'text'
+            ? {backgroundColor: theme.secondaryContainer}
+            : {backgroundColor: 'transparent'}
+          : variants(pressed, variant ?? 'contained'),
+      ]}>
+      {({pressed}) => (
         <Text
           style={[
             styles.text,
             disabled
-              ? {color: COLORS.chardonnay[800]}
-              : variantText[variant ?? 'contained'],
+              ? {color: theme.secondaryContainer}
+              : variantText(pressed, variant ?? 'contained'),
           ]}>
           {title}
         </Text>
-      </Pressable>
-    </Animated.View>
+      )}
+    </Pressable>
   );
 };
 
@@ -102,6 +94,15 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     fontWeight: '500',
+  },
+  button: {
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+    borderRadius: 5,
+    margin: 10,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

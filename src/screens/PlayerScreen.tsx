@@ -1,5 +1,4 @@
-import {StyleSheet, View, Image, Dimensions, StatusBar} from 'react-native';
-import {COLORS} from '../constants/Colors';
+import {StyleSheet, View, Image, StatusBar} from 'react-native';
 import {useQueueStore} from '../store/queueStore';
 import ProgressBar from '../components/ProgressBar';
 import PlayerControls from '../components/PlayerControls';
@@ -8,21 +7,26 @@ import LinearGradient from 'react-native-linear-gradient';
 import {usePlayerBackgrounGradient} from '../hooks/usePlayerBackgroundGradient';
 import {useIsFocused} from '@react-navigation/native';
 import Container from '../components/Container';
+import {useThemeStore} from '../store/themeStore';
 
 const PlayerScreen = () => {
   const track = useQueueStore(state => state.track);
   const img =
-    typeof track.artwork === 'object'
-      ? track.artwork.uri
+    typeof track.artwork === 'string'
+      ? track.artwork
       : Image.resolveAssetSource(track.artwork).uri;
 
-  const {gradient} = usePlayerBackgrounGradient(img);
+  const imgToGradient = typeof track.artwork === 'string' ? track.artwork : '';
+
+  const {gradient} = usePlayerBackgrounGradient(imgToGradient);
   const isFocused = useIsFocused();
+  const {theme} = useThemeStore();
+
   return (
     <Container>
       {isFocused && (
         <StatusBar
-          backgroundColor={gradient ? gradient?.average : COLORS.dark[900]}
+          backgroundColor={gradient ? gradient?.average : theme.background}
         />
       )}
       <LinearGradient
@@ -30,24 +34,25 @@ const PlayerScreen = () => {
         colors={
           gradient
             ? [gradient?.average, gradient?.dominant]
-            : [COLORS.dark[900], COLORS.dark[950]]
+            : [theme.background, theme.background]
         }>
-        <View style={style.wrapperIcon}>
+        <View style={style.wrapperImage}>
           <Image
-            source={track?.artwork}
+            source={{uri: img}}
             style={{
               width: '100%',
-              height: '50%',
+              height: '60%',
               resizeMode: 'cover',
               shadowColor: '#000',
               borderRadius: 10,
             }}
           />
+
+          <Title style={style.title} numberOfLines={2} ellipsizeMode="tail">
+            {track.title}
+          </Title>
         </View>
 
-        <Title style={style.title} numberOfLines={2} ellipsizeMode="tail">
-          {track.title}
-        </Title>
         <ProgressBar />
         <PlayerControls style={{marginTop: 40}} />
       </LinearGradient>
@@ -61,7 +66,7 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  wrapperIcon: {
+  wrapperImage: {
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10,
@@ -70,11 +75,11 @@ const style = StyleSheet.create({
   },
 
   title: {
-    fontSize: 20,
     textAlign: 'center',
     fontWeight: '700',
     width: '100%',
-    color: COLORS.chardonnay[200],
+    paddingHorizontal: 10,
+    marginTop: 30,
   },
 });
 

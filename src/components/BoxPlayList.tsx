@@ -1,8 +1,8 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
-import {COLORS} from '../constants/Colors';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useThemeStore} from '../store/themeStore';
 type Props = {
   onPress?: () => void;
   children: React.ReactNode;
@@ -10,17 +10,23 @@ type Props = {
 };
 
 const BoxPlayList: React.FC<Props> = ({onPress, icon, children}) => {
+  const {theme} = useThemeStore();
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      style={style.playListContainer}
+      style={[
+        style.playListContainer,
+        {
+          borderColor: theme.primary,
+        },
+      ]}
       onPress={onPress}>
       {icon && (
         <Icon
           name={icon}
           style={{marginLeft: 10}}
           size={20}
-          color={COLORS.chardonnay[300]}
+          color={theme.primary}
         />
       )}
 
@@ -38,7 +44,6 @@ const style = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 10,
     borderWidth: 0.5,
-    borderColor: COLORS.chardonnay[300],
     position: 'relative',
   },
 });

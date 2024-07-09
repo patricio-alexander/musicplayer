@@ -2,17 +2,12 @@ import {
   NavigationContainer,
   DarkTheme,
   DefaultTheme,
-  useRoute,
 } from '@react-navigation/native';
 import BottomTabs from './src/routes/BottomTabs';
 import React, {useEffect, useState} from 'react';
 import {PermissionsAndroid, StatusBar, useColorScheme} from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {COLORS} from './src/constants/Colors';
 import {useQueueStore} from './src/store/queueStore';
 import TrackPlayer, {
-  AppKilledPlaybackBehavior,
-  Capability,
   Event,
   useTrackPlayerEvents,
 } from 'react-native-track-player';
@@ -20,39 +15,34 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getActiveTrack} from 'react-native-track-player/lib/src/trackPlayer';
 import {Track} from './src/types/SongTypes';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {
-  getAll,
-  SortSongFields,
-  SortSongOrder,
-} from 'react-native-get-music-files';
-import {RootStackParamList, WelcomeScreenProps} from './src/types/ScreenTypes';
+
+import {RootStackParamList} from './src/types/ScreenTypes';
 import PermissionScreen from './src/screens/PermissionScreen';
 import SplashScreen from './src/screens/SplashScreen';
 import {initizalizedPlayer} from './PlaybackService';
 import {useAccess} from './src/store/accessStore';
 import {tracksFromDevice} from './src/helpers/tracksFromDevice';
+import {useThemeStore} from './src/store/themeStore';
+import {ThemeName} from './src/constants/Colors';
+import {useCheckIsFavorite} from './src/hooks/useCheckIsFavorite';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   const [isPlayerInitialized, setIsPlayerInitialized] =
     useState<boolean>(false);
-  const setActiveSongId = useQueueStore(state => state.setActiveQueueId);
 
-  const setTracks = useQueueStore(state => state.setTracks);
-  const setFavorites = useQueueStore(state => state.setFavorites);
-  const favorites = useQueueStore(state => state.favorites);
-  const setIsFavorite = useQueueStore(state => state.setIsFavorite);
-  const setIsRandom = useQueueStore(state => state.setIsRandom);
-  const setPlayLists = useQueueStore(state => state.setPlayLists);
-  const setTrack = useQueueStore(state => state.setTrack);
-  const access = useAccess(state => state.access);
-  const setAccess = useAccess(state => state.setAccess);
   const [isLoading, setIsLoading] = useState(true);
+
+  const {access, setAccess} = useAccess();
+  const {theme} = useThemeStore();
+
+  const {setTrack, setPlayLists, setIsRandom, setFavorites, setTracks} =
+    useQueueStore();
+
+  const {checkIsFavorite} = useCheckIsFavorite();
+
+  const {toggleTheme} = useThemeStore();
 
   const checkRandomTrack = async () => {
     try {
@@ -65,24 +55,19 @@ function App(): React.JSX.Element {
     }
   };
 
-  const checkIsFavorite = async () => {
-    const activeTrack = await getActiveTrack();
-    setIsFavorite(favorites.includes(activeTrack?.id));
-  };
-
   const addSongsInTrackPlayer = async (songs: Array<Track>) => {
-    const lastSongId = await AsyncStorage.getItem('lastSongId');
-    await TrackPlayer.skip(Number(lastSongId));
+    const lastSong = await AsyncStorage.getItem('lastSong');
+    const index = songs.findIndex((track: Track) => track.url === lastSong);
 
     const lastTrack = await TrackPlayer.getActiveTrack();
+    //await TrackPlayer.skip(index);
     setTrack({
-      id: lastTrack?.id,
       title: lastTrack?.title ?? '',
       url: lastTrack?.url ?? '',
       artwork: lastTrack?.artwork ?? require('./src/assets/player.png'),
     });
 
-    await TrackPlayer.add(songs);
+    await TrackPlayer.add(songs as any);
   };
 
   const initizalizedTracks = async () => {
@@ -90,7 +75,7 @@ function App(): React.JSX.Element {
       const initizalized = await initizalizedPlayer();
       setIsPlayerInitialized(initizalized);
     }
-    const tracks = await tracksFromDevice();
+    const tracks = await tracksFromDevice({offset: 0});
     setTracks(tracks);
     addSongsInTrackPlayer(tracks);
   };
@@ -104,6 +89,11 @@ function App(): React.JSX.Element {
         'Es posible que no exista ninguna playlist agregada por el usuario',
       );
     }
+  };
+
+  const loadTheme = async () => {
+    const theme = (await AsyncStorage.getItem('theme')) ?? 'default';
+    toggleTheme(theme as ThemeName);
   };
 
   const main = async (): Promise<void> => {
@@ -125,6 +115,8 @@ function App(): React.JSX.Element {
         setFavorites(ListFavorite);
       }
 
+      await loadTheme();
+
       setAccess(true);
       await initizalizedTracks();
       await checkPlayLists();
@@ -138,15 +130,13 @@ function App(): React.JSX.Element {
   useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], async event => {
     try {
       setTrack({
-        id: event?.track?.id,
-        artwork: event?.track?.artwork,
+        artwork: event?.track?.artwork ?? require('./src/assets/player.png'),
         title: event?.track?.title ?? '',
         url: event.track?.url ?? '',
       });
 
-      setActiveSongId(event?.track?.id);
-      await AsyncStorage.setItem('lastSongId', event?.track?.id?.toString());
-      checkIsFavorite();
+      await AsyncStorage.setItem('lastSong', event?.track?.url ?? '');
+      checkIsFavorite(event?.track);
     } catch (error) {
       console.log(error);
     }
@@ -162,7 +152,7 @@ function App(): React.JSX.Element {
     <NavigationContainer theme={isDarkMode ? DarkTheme : DefaultTheme}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={COLORS.dark[950]}
+        backgroundColor={theme.background}
       />
       <Stack.Navigator
         screenOptions={{

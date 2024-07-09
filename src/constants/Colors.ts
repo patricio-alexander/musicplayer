@@ -1,30 +1,29 @@
-export const COLORS = {
-  dark: {
-    '50': '#f7f6f9',
-    '100': '#efecf2',
-    '200': '#dbd6e1',
-    '300': '#bab1c8',
-    '400': '#9487a9',
-    '500': '#78688f',
-    '600': '#635376',
-    '700': '#514460',
-    '800': '#453b51',
-    '900': '#3d3446',
-    '950': '#0e0c10',
+export const THEME = {
+  default: {
+    primary: '#e5e5e5',
+    primaryContainer: '#e5e5e5',
+    secondaryContainer: '#676767',
+    secondary: '#7b7b7b',
+    tertiary: '#ffb86c',
+    background: '#0e0c10',
   },
-  chardonnay: {
-    '50': '#f7f7f7',
-    '100': '#ededed',
-    '200': '#e5e5e5',
-    '300': '#c8c8c8',
-    '400': '#adadad',
-    '500': '#999999',
-    '600': '#888888',
-    '700': '#7b7b7b',
-    '800': '#676767',
-    '900': '#545454',
-    '950': '#363636',
+  catppuccin: {
+    primary: '#cdd6f4',
+    primaryContainer: '#f5c2e7',
+    secondaryContainer: '#6c7086',
+    secondary: '#7f849c',
+    tertiary: '#a6e3a1',
+    background: '#11111b',
   },
-
-  rising: '#f9b759',
+  dracula: {
+    primary: '#F8F8F2',
+    primaryContainer: '#8BE9FD',
+    secondaryContainer: '#6272A4',
+    secondary: '#6272A4',
+    tertiary: '#50FA7B',
+    background: '#282A36',
+  },
 };
+
+export type Theme = typeof THEME.default;
+export type ThemeName = keyof typeof THEME;

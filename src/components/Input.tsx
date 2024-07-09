@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, TextInput, ViewStyle} from 'react-native';
-import {COLORS} from '../constants/Colors';
+import {THEME} from '../constants/Colors';
+import {useThemeStore} from '../store/themeStore';
 
 type Props = {
   placeholder?: string;
@@ -10,9 +11,16 @@ type Props = {
 };
 
 const Input: React.FC<Props> = ({placeholder, onChangeText, value, styles}) => {
+  const {theme} = useThemeStore();
   return (
     <TextInput
-      style={[style.input, styles]}
+      style={[
+        style.input,
+        styles,
+        {
+          borderColor: theme.primary,
+        },
+      ]}
       placeholder={placeholder}
       onChangeText={valueText => onChangeText(valueText)}
       value={value}
@@ -25,7 +33,6 @@ const style = StyleSheet.create({
     height: 50,
     padding: 10,
     fontSize: 17,
-    borderColor: COLORS.chardonnay[300],
     borderBottomWidth: 1,
   },
 });

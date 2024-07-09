@@ -1,39 +1,45 @@
 import {TouchableOpacity, Text, View, ImageSourcePropType} from 'react-native';
 import {StyleSheet} from 'react-native';
-import {COLORS} from '../constants/Colors';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useQueueStore} from '../store/queueStore';
 import {Track} from '../types/SongTypes';
 import React from 'react';
 import {Image} from 'react-native';
+import IconButton from './IconButton';
+import {useThemeStore} from '../store/themeStore';
 
 type Props = {
   track: Track;
-  index: number;
   onPress?: () => void;
+  onPressIcon?: () => void;
 };
-const PlayListItem: React.FC<Props> = ({track, index, onPress}) => {
-  const activeSongId = useQueueStore(state => state.activeQueueId);
+const PlayListItem: React.FC<Props> = ({track, onPress, onPressIcon}) => {
+  const t = useQueueStore(state => state.track);
+  const {theme} = useThemeStore();
   const img =
-    typeof track.artwork === 'object'
-      ? track.artwork.uri
+    typeof track.artwork === 'string'
+      ? track.artwork
       : Image.resolveAssetSource(track.artwork).uri;
 
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       style={[stylePlayListItem.container]}
-      onPress={onPress}
-      key={index}>
+      onPress={onPress}>
       <Image
         source={{uri: img}}
-        style={{
-          width: 50,
-          resizeMode: 'cover',
-          height: '100%',
-          marginRight: 6,
-          borderRadius: 5,
-        }}
+        style={[
+          {
+            width: 50,
+            resizeMode: 'cover',
+            height: '100%',
+            marginRight: 6,
+            borderRadius: 100,
+          },
+          track?.title === t.title && {
+            borderWidth: 1,
+            borderColor: theme.tertiary,
+          },
+        ]}
       />
 
       <Text
@@ -41,13 +47,17 @@ const PlayListItem: React.FC<Props> = ({track, index, onPress}) => {
         ellipsizeMode="tail"
         style={[
           stylePlayListItem.text,
-          track?.id === activeSongId && {
-            color: COLORS.rising,
+
+          {
+            color: theme.primary,
+          },
+          track?.title === t.title && {
+            color: theme.tertiary,
           },
         ]}>
         {track?.title}
       </Text>
-      <Icon name="more-vert" size={30} color={COLORS.chardonnay[50]} />
+      <IconButton name="dots-horizontal" onPress={onPressIcon} />
     </TouchableOpacity>
   );
 };
@@ -64,7 +74,6 @@ const stylePlayListItem = StyleSheet.create({
     height: 50,
   },
   text: {
-    color: COLORS.chardonnay[50],
     fontSize: 16,
     width: '60%',
   },

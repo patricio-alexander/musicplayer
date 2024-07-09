@@ -1,20 +1,15 @@
-import {StyleSheet, View} from 'react-native';
-import {COLORS} from '../constants/Colors';
 import SettingItem from '../components/SettingItem';
-import {useQueueStore} from '../store/queueStore';
+import Container from '../components/Container';
+import {SettingsScreenProps} from '../types/ScreenTypes';
 
-export default function Settings() {
+export default function Settings({navigation}: SettingsScreenProps) {
   return (
-    <View style={style.container}>
-      <SettingItem iconName="folder" title={'hola'} />
-    </View>
+    <Container>
+      <SettingItem
+        iconName="palette"
+        title="Temas"
+        onPress={() => navigation.navigate('Themes')}
+      />
+    </Container>
   );
 }
-
-const style = StyleSheet.create({
-  container: {
-    height: '100%',
-    backgroundColor: COLORS.dark[950],
-    padding: 10,
-  },
-});

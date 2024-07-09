@@ -1,7 +1,8 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import {COLORS} from '../constants/Colors';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {THEME} from '../constants/Colors';
+import {useThemeStore} from '../store/themeStore';
 
 type Props = {
   name: string;
@@ -18,6 +19,7 @@ const IconButton: React.FC<Props> = ({
   onPress,
   style,
 }) => {
+  const {theme} = useThemeStore();
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -26,7 +28,7 @@ const IconButton: React.FC<Props> = ({
         {borderRadius: size * 2, width: size * 2, height: size * 2},
         style,
       ]}>
-      <Icon name={name} color={color ?? COLORS.dark[300]} size={size} />
+      <Icon name={name} color={color ?? theme.primary} size={size} />
     </TouchableOpacity>
   );
 };

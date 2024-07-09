@@ -1,4 +1,3 @@
-import {COLORS} from '../constants/Colors';
 import SettingsScreen from '../screens/SettingsScreen';
 import PlayListsScreen from '../screens/PlayListsScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -6,16 +5,18 @@ import FavoriteScreen from '../screens/FavoriteScreen';
 import {StackParamList} from '../types/ScreenTypes';
 import ThemesScreen from '../screens/ThemesScreen';
 import CustomPlayListScreen from '../screens/CustomPlayListScreen';
+import {useThemeStore} from '../store/themeStore';
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
 const StackPlayLists = () => {
+  const {theme} = useThemeStore();
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: true,
         headerStyle: {
-          backgroundColor: COLORS.dark[950],
+          backgroundColor: theme.background,
         },
       }}
       initialRouteName="PlayLists">
@@ -27,7 +28,7 @@ const StackPlayLists = () => {
           headerShown: true,
           headerTitle: 'Canciones favoritas',
           headerStyle: {
-            backgroundColor: COLORS.dark[950],
+            backgroundColor: theme.background,
           },
         }}
       />
@@ -37,11 +38,12 @@ const StackPlayLists = () => {
 };
 
 const StackSettings = () => {
+  const {theme} = useThemeStore();
   return (
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: COLORS.dark[950],
+          backgroundColor: theme.background,
         },
       }}>
       <Stack.Screen
@@ -50,7 +52,11 @@ const StackSettings = () => {
         component={SettingsScreen}
       />
 
-      <Stack.Screen name="Themes" component={ThemesScreen} />
+      <Stack.Screen
+        options={{headerTitle: 'Temas'}}
+        name="Themes"
+        component={ThemesScreen}
+      />
     </Stack.Navigator>
   );
 };

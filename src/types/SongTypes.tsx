@@ -3,7 +3,6 @@ type Artwork = {
 };
 
 export type Track = {
-  id: number;
   title: string;
   url: string;
   artwork: Artwork | number;
