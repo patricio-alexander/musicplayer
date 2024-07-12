@@ -10,12 +10,10 @@ import {
   Alert,
 } from 'react-native';
 import IconButton from './IconButton';
-import {Track} from '../types/SongTypes';
+import {Track} from 'react-native-track-player';
 import {useThemeStore} from '../store/themeStore';
 import {useQueueStore} from '../store/queueStore';
-import CheckBox from '@react-native-community/checkbox';
 import {useState} from 'react';
-import Button from './Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = {
@@ -129,7 +127,7 @@ const TrackOptionsModal: React.FC<Props> = ({
         </ListItem>
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
           <IconButton
-            name={isFavorite ? 'heart' : 'heart-outline'}
+            name={isFavorite ? 'star' : 'star-outline'}
             color={isFavorite ? theme.tertiary : theme.primary}
             onPress={() => {
               if (!isFavorite) {

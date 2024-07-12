@@ -1,56 +1,54 @@
-import {StyleSheet, FlatList, Text, View} from 'react-native';
+import {StyleSheet, VirtualizedList} from 'react-native';
 import PlayListItem from '../components/PlayListItem';
 import {playTrack} from '../../PlaybackService';
 import {useQueueStore} from '../store/queueStore';
 import Container from '../components/Container';
-import {tracksFromDevice} from '../helpers/tracksFromDevice';
 import {useState} from 'react';
-import TrackPlayer from 'react-native-track-player';
-import {useCheckIsFavorite} from '../hooks/useCheckIsFavorite';
 import TrackOptionsModal from '../components/TrackOptionsModal';
-import {Track} from '../types/SongTypes';
+import {Track} from 'react-native-track-player';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const TracksScreen = () => {
-  const {tracks, setTracks, setPlayListId} = useQueueStore();
-  const {checkIsFavorite} = useCheckIsFavorite();
-  const [offset, setOffset] = useState(20);
+  const {tracks, setPlayListId} = useQueueStore();
   const [trackSelected, setTrackSelected] = useState<Track | null>(null);
   const [visible, setVisible] = useState<boolean>(false);
+  const insets = useSafeAreaInsets();
 
-  const loadData = async () => {
-    const newTracks = await tracksFromDevice({offset});
-    setOffset(offset + 20);
-    setTracks([...tracks, ...newTracks]);
+  const renderItem = ({item}: {item: Track}) => {
+    return (
+      <PlayListItem
+        track={item}
+        onPress={async () => {
+          const id = tracks.findIndex(track => track.url === item.url);
 
-    TrackPlayer.add(newTracks);
+          playTrack({id});
+          setPlayListId('');
+        }}
+        onPressIcon={() => {
+          setVisible(true);
+          setTrackSelected(item);
+        }}
+      />
+    );
   };
+
   return (
-    <Container>
+    <Container style={{paddingTop: insets.top}}>
       <TrackOptionsModal
         visible={visible}
         onRequestClose={() => setVisible(false)}
         track={trackSelected}
       />
-      <FlatList
+      <VirtualizedList
         data={tracks}
-        contentContainerStyle={styles.list}
-        onEndReached={loadData}
-        renderItem={({item}) => (
-          <PlayListItem
-            track={item}
-            onPress={async () => {
-              const id = tracks.findIndex(track => track.url === item.url);
-
-              playTrack({id});
-              setPlayListId('');
-            }}
-            onPressIcon={() => {
-              setVisible(true);
-              setTrackSelected(item);
-              checkIsFavorite(item);
-            }}
-          />
-        )}
+        getItemCount={data => data.length}
+        onEndReachedThreshold={0.5}
+        initialNumToRender={20}
+        keyExtractor={(_, index) => index.toString()}
+        contentContainerStyle={[styles.list]}
+        // onEndReached={loadData}
+        getItem={(data, i) => data[i]}
+        renderItem={renderItem}
       />
     </Container>
   );
@@ -59,7 +57,6 @@ const TracksScreen = () => {
 const styles = StyleSheet.create({
   list: {
     paddingBottom: 100,
-    paddingTop: 10,
   },
   text: {
     fontWeight: '500',

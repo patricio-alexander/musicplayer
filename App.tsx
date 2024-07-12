@@ -12,9 +12,8 @@ import TrackPlayer, {
   useTrackPlayerEvents,
 } from 'react-native-track-player';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getActiveTrack} from 'react-native-track-player/lib/src/trackPlayer';
-import {Track} from './src/types/SongTypes';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Track} from 'react-native-track-player';
 
 import {RootStackParamList} from './src/types/ScreenTypes';
 import PermissionScreen from './src/screens/PermissionScreen';
@@ -25,8 +24,10 @@ import {tracksFromDevice} from './src/helpers/tracksFromDevice';
 import {useThemeStore} from './src/store/themeStore';
 import {ThemeName} from './src/constants/Colors';
 import {useCheckIsFavorite} from './src/hooks/useCheckIsFavorite';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import 'react-native-gesture-handler';
 
-function App(): React.JSX.Element {
+function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   const [isPlayerInitialized, setIsPlayerInitialized] =
@@ -35,9 +36,8 @@ function App(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState(true);
 
   const {access, setAccess} = useAccess();
-  const {theme} = useThemeStore();
 
-  const {setTrack, setPlayLists, setIsRandom, setFavorites, setTracks} =
+  const {setTrack, tracks, setPlayLists, setIsRandom, setFavorites, setTracks} =
     useQueueStore();
 
   const {checkIsFavorite} = useCheckIsFavorite();
@@ -55,29 +55,26 @@ function App(): React.JSX.Element {
     }
   };
 
-  const addSongsInTrackPlayer = async (songs: Array<Track>) => {
-    const lastSong = await AsyncStorage.getItem('lastSong');
-    const index = songs.findIndex((track: Track) => track.url === lastSong);
-
-    const lastTrack = await TrackPlayer.getActiveTrack();
-    //await TrackPlayer.skip(index);
-    setTrack({
-      title: lastTrack?.title ?? '',
-      url: lastTrack?.url ?? '',
-      artwork: lastTrack?.artwork ?? require('./src/assets/player.png'),
-    });
-
-    await TrackPlayer.add(songs as any);
-  };
-
-  const initizalizedTracks = async () => {
+  const initializedPlayer = async () => {
     if (!isPlayerInitialized) {
       const initizalized = await initizalizedPlayer();
       setIsPlayerInitialized(initizalized);
     }
-    const tracks = await tracksFromDevice({offset: 0});
-    setTracks(tracks);
-    addSongsInTrackPlayer(tracks);
+    let offset = 0;
+    let allTracks: Track[] = [];
+    while (true) {
+      console.log(offset);
+      const newTracks = await tracksFromDevice({offset: offset});
+      if (newTracks.length) {
+        console.log(tracks);
+        allTracks = [...allTracks, ...newTracks];
+        await TrackPlayer.add(newTracks);
+        offset += 20;
+      } else {
+        break;
+      }
+    }
+    setTracks(allTracks);
   };
 
   const checkPlayLists = async () => {
@@ -118,7 +115,7 @@ function App(): React.JSX.Element {
       await loadTheme();
 
       setAccess(true);
-      await initizalizedTracks();
+      await initializedPlayer();
       await checkPlayLists();
       await checkRandomTrack();
       setIsLoading(false);
@@ -149,24 +146,25 @@ function App(): React.JSX.Element {
   const Stack = createNativeStackNavigator<RootStackParamList>();
 
   return (
-    <NavigationContainer theme={isDarkMode ? DarkTheme : DefaultTheme}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={theme.background}
-      />
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
-        {isLoading ? (
-          <Stack.Screen name="Splash" component={SplashScreen} />
-        ) : access ? (
-          <Stack.Screen name="Tabs" component={BottomTabs} />
-        ) : (
-          <Stack.Screen name="Permission" component={PermissionScreen} />
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <>
+      <StatusBar backgroundColor={'transparent'} translucent />
+      <NavigationContainer theme={isDarkMode ? DarkTheme : DefaultTheme}>
+        <SafeAreaProvider>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}>
+            {isLoading ? (
+              <Stack.Screen name="Splash" component={SplashScreen} />
+            ) : access ? (
+              <Stack.Screen name="Tabs" component={BottomTabs} />
+            ) : (
+              <Stack.Screen name="Permission" component={PermissionScreen} />
+            )}
+          </Stack.Navigator>
+        </SafeAreaProvider>
+      </NavigationContainer>
+    </>
   );
 }
 

@@ -1,6 +1,7 @@
 import {create} from 'zustand';
 
-import {PlayList, Track} from '../types/SongTypes';
+import {PlayList} from '../types/SongTypes';
+import {Track} from 'react-native-track-player';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type QueueStore = {
@@ -63,6 +64,10 @@ export const useQueueStore = create<QueueStore>()((set, get) => ({
       const storageFavorites = await AsyncStorage.getItem('favorites');
       if (!storageFavorites) {
         await AsyncStorage.setItem('favorites', JSON.stringify([track]));
+        set({
+          favorites: [track],
+        });
+        return;
       }
       const localFavorites = JSON.parse(storageFavorites ?? '');
       const exist = localFavorites.find(

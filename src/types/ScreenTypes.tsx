@@ -1,4 +1,5 @@
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {StackScreenProps} from '@react-navigation/stack';
+import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 
 export type RootStackParamList = {
   Splash: undefined;
@@ -14,30 +15,27 @@ export type StackParamList = {
   CustomPlayList: {playListId: number};
 };
 
-export type PlayListScreenProps = NativeStackScreenProps<
-  StackParamList,
-  'PlayLists'
->;
-export type FavoriteScreenProps = NativeStackScreenProps<
-  StackParamList,
-  'Favorites'
->;
-export type SettingsScreenProps = NativeStackScreenProps<
-  StackParamList,
-  'Settings'
->;
+export type TabsParamList = {
+  Tracks: undefined;
+  Player: undefined;
+  PlayList: undefined;
+  Setting: undefined;
+};
 
-export type CustomPlayListProps = NativeStackScreenProps<
+export type PlayerListTabProps = BottomTabScreenProps<TabsParamList, 'Player'>;
+
+export type PlayListScreenProps = StackScreenProps<StackParamList, 'PlayLists'>;
+export type FavoriteScreenProps = StackScreenProps<StackParamList, 'Favorites'>;
+export type SettingsScreenProps = StackScreenProps<StackParamList, 'Settings'>;
+
+export type CustomPlayListProps = StackScreenProps<
   StackParamList,
   'CustomPlayList'
 >;
 
-export type WelcomeScreenProps = NativeStackScreenProps<
+export type WelcomeScreenProps = StackScreenProps<
   RootStackParamList,
   'Permission'
 >;
 
-export type TabsScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  'Tabs'
->;
+export type TabsScreenProps = StackScreenProps<RootStackParamList, 'Tabs'>;

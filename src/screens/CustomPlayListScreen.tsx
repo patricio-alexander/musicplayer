@@ -10,11 +10,14 @@ import PlayListItem from '../components/PlayListItem';
 import Input from '../components/Input';
 import CheckBox from '@react-native-community/checkbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {PlayList, Track} from '../types/SongTypes';
+import {PlayList} from '../types/SongTypes';
 import {playTrack} from '../../PlaybackService';
 import ListItem from '../components/ListItem';
 import IconButton from '../components/IconButton';
 import TrackOptionsModal from '../components/TrackOptionsModal';
+import {Track} from 'react-native-track-player';
+import {getQueue} from 'react-native-track-player/lib/src/trackPlayer';
+import TrackPlayer from 'react-native-track-player';
 
 type SelectedTrack = Track & {
   checked: boolean;
@@ -100,7 +103,7 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
       const currentPlayListTracks = JSON.parse(localStorage)[playListId].tracks;
       const selecteds = currentPlayListTracks.map((track: Track) => track.url);
 
-      const selectedTracks = tracks.map((track: Track, index: number) => {
+      const selectedTracks = tracks.map((track: Track) => {
         return {
           ...track,
           checked: selecteds.includes(track.url),
@@ -113,6 +116,16 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
     }
   };
 
+  const loadTracksInTrackPlayer = async () => {
+    const queue = await getQueue();
+    playLists[playListId].tracks.forEach(track => {
+      const isLoad = queue.some(t => t.url === track.url);
+      if (!isLoad) {
+        TrackPlayer.add([track]);
+      }
+    });
+  };
+
   useEffect(() => {
     navigation.setOptions({
       title: playLists[playListId]?.name,
@@ -121,6 +134,10 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
       ),
     });
   }, [navigation, playLists]);
+
+  useEffect(() => {
+    loadTracksInTrackPlayer();
+  }, []);
 
   return (
     <Container>
@@ -233,8 +250,9 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
           renderItem={({item}) => (
             <PlayListItem
               track={item}
-              onPress={() => {
-                const id = tracks.findIndex(track => track.url === item.url);
+              onPress={async () => {
+                const queue = await getQueue();
+                const id = queue.findIndex(track => track.url === item.url);
                 playTrack({id});
                 setPlayListId(playListId.toString());
               }}

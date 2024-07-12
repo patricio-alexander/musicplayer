@@ -4,12 +4,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Player from '../screens/PlayerScreen';
 import {StackPlayLists, StackSettings} from './Stacks';
 import {useThemeStore} from '../store/themeStore';
-type TabBarIcon = {
-  color: string;
-  focused: boolean;
-};
+import {TabsParamList} from '../types/ScreenTypes';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<TabsParamList>();
 const BottomTabs = () => {
   const {theme} = useThemeStore();
   return (
@@ -34,12 +31,12 @@ const BottomTabs = () => {
         },
       }}>
       <Tab.Screen
-        name="Songs"
+        name="Tracks"
         component={TracksScreen}
         options={{
           title: 'Canciones',
-          tabBarIcon: ({color}: TabBarIcon) => (
-            <Icon name="library-music" size={28} color={color} />
+          tabBarIcon: ({color}) => (
+            <Icon name="library-music" size={25} color={color} />
           ),
         }}
       />
@@ -49,8 +46,8 @@ const BottomTabs = () => {
         component={Player}
         options={{
           title: 'Reproductor',
-          tabBarIcon: ({color}: TabBarIcon) => (
-            <Icon name="play-circle" size={28} color={color} />
+          tabBarIcon: ({color}) => (
+            <Icon name="play-circle" size={25} color={color} />
           ),
         }}
       />
@@ -60,8 +57,8 @@ const BottomTabs = () => {
         component={StackPlayLists}
         options={{
           title: 'Playlist',
-          tabBarIcon: ({color}: TabBarIcon) => (
-            <Icon name="queue-music" size={30} color={color} />
+          tabBarIcon: ({color}) => (
+            <Icon name="queue-music" size={25} color={color} />
           ),
         }}
       />
@@ -71,8 +68,8 @@ const BottomTabs = () => {
         component={StackSettings}
         options={{
           title: 'Ajustes',
-          tabBarIcon: ({color}: TabBarIcon) => (
-            <Icon name="settings" size={28} color={color} />
+          tabBarIcon: ({color}) => (
+            <Icon name="settings" size={25} color={color} />
           ),
         }}
       />

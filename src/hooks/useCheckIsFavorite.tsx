@@ -1,13 +1,11 @@
 import {useQueueStore} from '../store/queueStore';
-import {Track} from '../types/SongTypes';
+import {Track} from 'react-native-track-player';
 
 export const useCheckIsFavorite = () => {
   const {favorites, setIsFavorite} = useQueueStore();
 
-  const checkIsFavorite = async (track: Track) => {
-    const exist = favorites.some(
-      (favorite: Track) => favorite?.url === track?.url,
-    );
+  const checkIsFavorite = async (track: Track | undefined) => {
+    const exist = favorites.some(favorite => favorite?.url === track?.url);
 
     setIsFavorite(exist);
   };

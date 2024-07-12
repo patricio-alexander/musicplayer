@@ -1,14 +1,11 @@
 import {StyleSheet, View, ViewStyle} from 'react-native';
 import IconButton from './IconButton';
-import React, {useEffect} from 'react';
-import {THEME} from '../constants/Colors';
+import React from 'react';
 import TrackPlayer, {useIsPlaying} from 'react-native-track-player';
 import {useQueueStore} from '../store/queueStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {playTrack} from '../../PlaybackService';
 import {useThemeStore} from '../store/themeStore';
-import {Track} from '../types/SongTypes';
-import {useCheckIsFavorite} from '../hooks/useCheckIsFavorite';
 
 type Props = {
   style?: ViewStyle;
@@ -34,10 +31,15 @@ const PlayerControls: React.FC<Props> = ({style}) => {
 
   // 1 cuando el reproduccion aleatoria esta activada y 0 cuando no
   const randomTracks = async () => {
-    setIsRandom(!isRandom);
+    if (isRandom) {
+      setIsRandom(false);
+      await AsyncStorage.removeItem('randomtracks');
+      return;
+    }
+    setIsRandom(true);
+
     await AsyncStorage.setItem('randomtracks', '1');
   };
-  //
 
   const randomTrackInCustomPlayList = () => {
     const playList = playLists[Number(playListId)];
@@ -70,7 +72,7 @@ const PlayerControls: React.FC<Props> = ({style}) => {
 
       const previousTrackInPlayList =
         currentIndex > 0 && currentIndex < playList.tracks.length
-          ? playList.tracks.find((track, i) => i === currentIndex - 1)
+          ? playList.tracks.find((_, i) => i === currentIndex - 1)
           : playList.tracks[playList.tracks.length - 1];
 
       const nextIndexTrack = tracks.findIndex(
@@ -106,7 +108,7 @@ const PlayerControls: React.FC<Props> = ({style}) => {
       const nextTrackInPlayList =
         currentIndex !== -1 && currentIndex < playList.tracks.length - 1
           ? playLists[Number(playListId)].tracks.find(
-              (track, i) => i === currentIndex + 1,
+              (_, i) => i === currentIndex + 1,
             )
           : null;
 
@@ -122,44 +124,34 @@ const PlayerControls: React.FC<Props> = ({style}) => {
     TrackPlayer.skipToNext();
   };
 
-  // useEffect(() => {
-  //   removeIsFavorite();
-  // }, [isFavorite]);
-
   return (
-    <>
-      <View style={[styles.container, style]}>
-        <IconButton
-          name={isFavorite ? 'heart' : 'heart-outline'}
-          size={25}
-          color={isFavorite ? theme.tertiary : theme.primary}
-          onPress={() => {
-            if (!isFavorite) {
-              markFavorite(track);
-              return;
-            }
-            removeFavorites(track.url);
-          }}
-        />
-        <IconButton
-          name="skip-previous-outline"
-          size={45}
-          onPress={skipPrevious}
-        />
-        <IconButton
-          name={playing ? 'play-outline' : 'pause'}
-          size={playing ? 60 : 60}
-          onPress={playing ? TrackPlayer.pause : TrackPlayer.play}
-        />
-        <IconButton name="skip-next-outline" size={45} onPress={skipNext} />
-        <IconButton
-          name={isRandom ? 'shuffle' : 'shuffle-disabled'}
-          size={25}
-          color={isRandom ? theme.tertiary : theme.primary}
-          onPress={randomTracks}
-        />
-      </View>
-    </>
+    <View style={[styles.container, style]}>
+      <IconButton
+        name={isFavorite ? 'star' : 'star-outline'}
+        size={25}
+        color={isFavorite ? theme.tertiary : theme.primary}
+        onPress={() => {
+          if (!isFavorite) {
+            markFavorite(track);
+            return;
+          }
+          removeFavorites(track.url);
+        }}
+      />
+      <IconButton name="skip-previous" size={45} onPress={skipPrevious} />
+      <IconButton
+        name={playing ? 'play' : 'pause'}
+        size={playing ? 60 : 60}
+        onPress={playing ? TrackPlayer.pause : TrackPlayer.play}
+      />
+      <IconButton name="skip-next" size={45} onPress={skipNext} />
+      <IconButton
+        name={isRandom ? 'shuffle' : 'shuffle-disabled'}
+        size={25}
+        color={isRandom ? theme.tertiary : theme.primary}
+        onPress={randomTracks}
+      />
+    </View>
   );
 };
 

@@ -11,7 +11,7 @@ export const usePlayerBackgrounGradient = (imgUrl: string) => {
       key: imgUrl,
     })
       .then(c => setGradient(c as AndroidImageColors))
-      .catch(c => setGradient(null));
+      .catch(() => setGradient(null));
   }, [imgUrl]);
 
   return {gradient};

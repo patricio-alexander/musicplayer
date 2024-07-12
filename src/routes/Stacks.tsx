@@ -1,38 +1,38 @@
 import SettingsScreen from '../screens/SettingsScreen';
 import PlayListsScreen from '../screens/PlayListsScreen';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import FavoriteScreen from '../screens/FavoriteScreen';
 import {StackParamList} from '../types/ScreenTypes';
 import ThemesScreen from '../screens/ThemesScreen';
 import CustomPlayListScreen from '../screens/CustomPlayListScreen';
 import {useThemeStore} from '../store/themeStore';
+import {createStackNavigator} from '@react-navigation/stack';
 
-const Stack = createNativeStackNavigator<StackParamList>();
+const Stack = createStackNavigator<StackParamList>();
 
 const StackPlayLists = () => {
   const {theme} = useThemeStore();
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: true,
-        headerStyle: {
-          backgroundColor: theme.background,
-        },
-      }}
-      initialRouteName="PlayLists">
-      <Stack.Screen name="PlayLists" component={PlayListsScreen} />
-      <Stack.Screen
-        name="Favorites"
-        component={FavoriteScreen}
-        options={{
-          headerShown: true,
-          headerTitle: 'Canciones favoritas',
+    <Stack.Navigator>
+      <Stack.Group>
+        <Stack.Screen
+          name="PlayLists"
+          options={{
+            headerShown: false,
+          }}
+          component={PlayListsScreen}
+        />
+      </Stack.Group>
+      <Stack.Group
+        screenOptions={{
+          presentation: 'modal',
+          headerTintColor: theme.tertiary,
           headerStyle: {
             backgroundColor: theme.background,
           },
-        }}
-      />
-      <Stack.Screen name="CustomPlayList" component={CustomPlayListScreen} />
+        }}>
+        <Stack.Screen name="Favorites" component={FavoriteScreen} />
+        <Stack.Screen name="CustomPlayList" component={CustomPlayListScreen} />
+      </Stack.Group>
     </Stack.Navigator>
   );
 };
@@ -42,6 +42,7 @@ const StackSettings = () => {
   return (
     <Stack.Navigator
       screenOptions={{
+        headerTintColor: theme.primary,
         headerStyle: {
           backgroundColor: theme.background,
         },

@@ -4,8 +4,8 @@ import PlayListItem from '../components/PlayListItem';
 import {playTrack} from '../../PlaybackService';
 import Container from '../components/Container';
 import {useState} from 'react';
-import {Track} from '../types/SongTypes';
 import TrackOptionsModal from '../components/TrackOptionsModal';
+import {Track} from 'react-native-track-player';
 
 const FavoriteScreen = () => {
   const {favorites, tracks} = useQueueStore();
@@ -22,7 +22,7 @@ const FavoriteScreen = () => {
       <FlatList
         style={{marginTop: 10}}
         data={favorites}
-        renderItem={({item, index}) => (
+        renderItem={({item}) => (
           <PlayListItem
             track={item}
             onPress={() => {

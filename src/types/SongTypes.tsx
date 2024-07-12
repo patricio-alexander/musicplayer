@@ -1,11 +1,7 @@
+import {Track} from 'react-native-track-player';
+
 type Artwork = {
   uri: string;
-};
-
-export type Track = {
-  title: string;
-  url: string;
-  artwork: Artwork | number;
 };
 
 export type PlayList = {

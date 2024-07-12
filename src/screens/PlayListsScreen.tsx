@@ -11,6 +11,7 @@ import Modal from '../components/Modal';
 import Title from '../components/Title';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useThemeStore} from '../store/themeStore';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
   const favorites = useQueueStore(state => state.favorites);
@@ -19,6 +20,7 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
   const playLists = useQueueStore(state => state.playLists);
   const setPlayLists = useQueueStore(state => state.setPlayLists);
   const {theme} = useThemeStore();
+  const insets = useSafeAreaInsets();
 
   const addPlayList = async () => {
     const data = {
@@ -35,7 +37,7 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
   };
 
   return (
-    <>
+    <Container style={{paddingTop: insets.top}}>
       <Modal
         animationType="fade"
         visible={visible}
@@ -66,7 +68,7 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
         />
 
         <BoxPlayList
-          icon="heart"
+          icon="star"
           onPress={() => navigation.navigate('Favorites')}>
           <Title>Canciones favoritas</Title>
           <Text
@@ -84,7 +86,7 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
           renderItem={({item, index}) => (
             <BoxPlayList
               key={index}
-              icon="music"
+              icon="playlist-music"
               onPress={() =>
                 navigation.navigate('CustomPlayList', {playListId: index})
               }>
@@ -102,7 +104,7 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
           )}
         />
       </Container>
-    </>
+    </Container>
   );
 };
 
