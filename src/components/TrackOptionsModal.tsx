@@ -1,14 +1,7 @@
 import Modal from './Modal';
 import Title from './Title';
 import ListItem from './ListItem';
-import {
-  View,
-  ToastAndroid,
-  Text,
-  StyleSheet,
-  FlatList,
-  Alert,
-} from 'react-native';
+import {View, ToastAndroid, Text, StyleSheet, FlatList} from 'react-native';
 import IconButton from './IconButton';
 import {Track} from 'react-native-track-player';
 import {useThemeStore} from '../store/themeStore';
@@ -89,7 +82,7 @@ const TrackOptionsModal: React.FC<Props> = ({
             <ListItem
               icon="queue-music"
               onPress={() => addTrackInPlayList({playListName: item.name})}>
-              <Text style={[styles.text, {color: theme.primary}]}>
+              <Text style={[styles.text, {color: theme.text}]}>
                 {item.name}
               </Text>
             </ListItem>
@@ -113,12 +106,12 @@ const TrackOptionsModal: React.FC<Props> = ({
             onRequestClose();
             loadPlayLists();
           }}>
-          <Text style={[styles.text, {color: theme.primary}]}>Agregar a</Text>
+          <Text style={[styles.text, {color: theme.text}]}>Agregar a</Text>
         </ListItem>
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
           <IconButton
             name={isFavorite ? 'star' : 'star-outline'}
-            color={isFavorite ? theme.tertiary : theme.primary}
+            color={isFavorite ? theme.accent : theme.text}
             onPress={() => {
               if (!isFavorite) {
                 markFavorite(track);

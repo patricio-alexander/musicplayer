@@ -9,6 +9,7 @@ import {randomTrackInCustomPlayList} from '../helpers/musicHelpers';
 import {useThemeStore} from '../store/themeStore';
 import {ToastAndroid} from 'react-native';
 import {randomIdTrack} from '../helpers/musicHelpers';
+import {play} from 'react-native-track-player/lib/src/trackPlayer';
 
 type Props = {
   style?: ViewStyle;
@@ -121,7 +122,7 @@ const PlayerControls: React.FC<Props> = ({style}) => {
       <IconButton
         name={isFavorite ? 'star' : 'star-outline'}
         size={25}
-        color={isFavorite ? theme.tertiary : theme.primary}
+        color={isFavorite ? theme.accent : theme.text}
         onPress={() => {
           if (!isFavorite) {
             markFavorite(track);
@@ -133,14 +134,16 @@ const PlayerControls: React.FC<Props> = ({style}) => {
       <IconButton name="skip-previous" size={45} onPress={skipPrevious} />
       <IconButton
         name={playing ? 'play' : 'pause'}
-        size={playing ? 60 : 60}
+        size={playing ? 35 : 35}
+        style={{backgroundColor: theme.accent}}
+        color={theme.secondary}
         onPress={playing ? TrackPlayer.pause : TrackPlayer.play}
       />
       <IconButton name="skip-next" size={45} onPress={skipNext} />
       <IconButton
         name={isRandom ? 'shuffle' : 'shuffle-disabled'}
         size={25}
-        color={isRandom ? theme.tertiary : theme.primary}
+        color={isRandom ? theme.accent : theme.text}
         onPress={randomTracks}
       />
     </View>

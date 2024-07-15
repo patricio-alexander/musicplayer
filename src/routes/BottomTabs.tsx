@@ -1,6 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import TracksScreen from '../screens/TracksScreen';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Player from '../screens/PlayerScreen';
 import {StackPlayLists, StackSettings} from './Stacks';
 import {useThemeStore} from '../store/themeStore';
@@ -12,8 +12,11 @@ const BottomTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: theme.primary,
-        tabBarInactiveTintColor: theme.secondary,
+        tabBarActiveTintColor: theme.accent,
+        tabBarInactiveTintColor: theme.text,
+        headerTitleStyle: {
+          fontFamily: 'NunitoSans_700Bold',
+        },
 
         tabBarStyle: {
           backgroundColor: theme.background,
@@ -25,7 +28,7 @@ const BottomTabs = () => {
           height: 55,
         },
         tabBarLabelStyle: {
-          fontWeight: '700',
+          fontFamily: 'NunitoSans_700Bold',
           fontSize: 12,
         },
       }}>
@@ -40,7 +43,7 @@ const BottomTabs = () => {
           headerTitle: 'Minimalist Player',
           title: 'Canciones',
           tabBarIcon: ({color}) => (
-            <Icon name="library-music" size={25} color={color} />
+            <Icon name="music-box-outline" size={25} color={color} />
           ),
         }}
       />
@@ -52,7 +55,7 @@ const BottomTabs = () => {
           headerShown: false,
           title: 'Reproductor',
           tabBarIcon: ({color}) => (
-            <Icon name="play-circle" size={25} color={color} />
+            <Icon name="play-circle-outline" size={25} color={color} />
           ),
         }}
       />
@@ -64,7 +67,7 @@ const BottomTabs = () => {
           headerShown: false,
           title: 'Playlist',
           tabBarIcon: ({color}) => (
-            <Icon name="queue-music" size={25} color={color} />
+            <Icon name="playlist-music-outline" size={25} color={color} />
           ),
         }}
       />
@@ -75,9 +78,7 @@ const BottomTabs = () => {
         options={{
           title: 'Ajustes',
           headerShown: false,
-          tabBarIcon: ({color}) => (
-            <Icon name="settings" size={25} color={color} />
-          ),
+          tabBarIcon: ({color}) => <Icon name="cog" size={25} color={color} />,
         }}
       />
     </Tab.Navigator>

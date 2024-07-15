@@ -18,7 +18,9 @@ const Input: React.FC<Props> = ({placeholder, onChangeText, value, styles}) => {
         style.input,
         styles,
         {
-          borderColor: theme.primary,
+          borderColor: theme.text,
+          color: theme.text,
+          fontFamily: 'NunitoSans_400Regular',
         },
       ]}
       placeholder={placeholder}

@@ -74,7 +74,7 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
             style={[
               style.badge,
               {
-                color: theme.primary,
+                color: theme.text,
               },
             ]}>
             {favorites.length}
@@ -95,7 +95,7 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
                 style={[
                   style.badge,
                   {
-                    color: theme.primary,
+                    color: theme.text,
                   },
                 ]}>
                 {item.tracks?.length}

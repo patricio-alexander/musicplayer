@@ -11,7 +11,7 @@ const SplashScreen = () => {
       <StatusBar backgroundColor={theme.background} translucent />
       <Container style={styles.container}>
         <Logo width={200} height={100} />
-        <ActivityIndicator color={theme.tertiary} style={{marginTop: 10}} />
+        <ActivityIndicator color={theme.accent} style={{marginTop: 10}} />
       </Container>
     </>
   );

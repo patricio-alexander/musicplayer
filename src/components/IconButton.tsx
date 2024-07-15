@@ -28,7 +28,7 @@ const IconButton: React.FC<Props> = ({
         {borderRadius: size * 2, width: size * 2, height: size * 2},
         style,
       ]}>
-      <Icon name={name} color={color ?? theme.primary} size={size} />
+      <Icon name={name} color={color ?? theme.text} size={size} />
     </TouchableOpacity>
   );
 };

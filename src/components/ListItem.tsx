@@ -20,7 +20,7 @@ const ListItem: React.FC<Props> = ({children, onPress, icon}) => {
           name={icon}
           size={24}
           style={{marginRight: 3}}
-          color={theme.primary}
+          color={theme.text}
         />
       )}
       {children}

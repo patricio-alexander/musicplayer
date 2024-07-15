@@ -48,6 +48,10 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
     setCheckedTracks(newSelectedTracks);
   };
 
+  const filter = checkedTracks.filter(track =>
+    track.title?.toLowerCase().includes(search.toLowerCase()),
+  );
+
   const addTracksSelected = async () => {
     const tracksChecked = checkedTracks.filter(track => track.checked);
 
@@ -140,7 +144,7 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
         />
         <FlatList
           style={styles.flatList}
-          data={checkedTracks}
+          data={filter}
           renderItem={({item}) => (
             <ListItem onPress={() => onChangeCheckBox({url: item.url})}>
               <CheckBox
@@ -252,7 +256,7 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
 
 const styles = StyleSheet.create({
   text: {
-    fontWeight: '500',
+    fontFamily: 'NunitoSans_600SemiBold',
     fontSize: 17,
   },
   checkBox: {

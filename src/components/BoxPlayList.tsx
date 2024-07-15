@@ -17,7 +17,7 @@ const BoxPlayList: React.FC<Props> = ({onPress, icon, children}) => {
       style={[
         style.playListContainer,
         {
-          borderColor: theme.primary,
+          borderColor: theme.text,
         },
       ]}
       onPress={onPress}>
@@ -26,7 +26,7 @@ const BoxPlayList: React.FC<Props> = ({onPress, icon, children}) => {
           name={icon}
           style={{marginLeft: 10}}
           size={20}
-          color={theme.primary}
+          color={theme.text}
         />
       )}
 

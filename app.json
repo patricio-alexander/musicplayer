@@ -1,4 +1,14 @@
 {
   "name": "playermusicapp",
-  "displayName": "Minimalist Player"
+  "displayName": "Minimalist Player",
+  "plugins": [
+    [
+      "expo-font",
+      {
+        "fonts": [
+          "node_modules/@expo-google-fonts/nunito/NunitoSans_400Regular.ttf"
+        ]
+      }
+    ]
+  ]
 }

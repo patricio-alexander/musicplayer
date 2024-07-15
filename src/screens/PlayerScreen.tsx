@@ -34,8 +34,10 @@ const PlayerScreen = () => {
   };
 
   useEffect(() => {
-    fadeAnim.setValue(0.4);
+    fadeAnim.setValue(1);
     if (isFocused && typeof track.artwork === 'string') {
+      fadeAnim.setValue(0);
+
       fadeIn();
       return;
     }
@@ -56,7 +58,7 @@ const PlayerScreen = () => {
           style={[StyleSheet.absoluteFillObject]}
           colors={
             gradient
-              ? [gradient?.dominant, theme.background]
+              ? [gradient?.dominant, gradient?.average]
               : [theme.background, theme.background]
           }
           start={{x: 0, y: 0}}
@@ -66,7 +68,7 @@ const PlayerScreen = () => {
       <View style={style.wrapperImage}>
         <View style={{alignItems: 'center', marginBottom: 20}}>
           <Title>Reproduciendo</Title>
-          <Text style={[style.namePlayList, {color: theme.tertiary}]}>
+          <Text style={[style.namePlayList, {color: theme.accent}]}>
             {!playListId
               ? 'Canciones del dispositivo'
               : playLists[Number(playListId)].name}
@@ -79,7 +81,7 @@ const PlayerScreen = () => {
             width: '90%',
             height: '65%',
             resizeMode: 'cover',
-            shadowColor: '#000',
+
             borderRadius: 10,
           }}
         />
@@ -113,14 +115,12 @@ const style = StyleSheet.create({
   },
 
   namePlayList: {
-    fontSize: 15,
+    fontSize: 16,
+    fontFamily: 'NunitoSans_400Regular',
   },
 
   title: {
-    textAlign: 'center',
-    fontWeight: '700',
     width: '100%',
-    paddingHorizontal: 10,
     marginTop: 30,
   },
 });

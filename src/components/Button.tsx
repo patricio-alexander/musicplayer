@@ -1,12 +1,5 @@
-import {
-  Text,
-  Pressable,
-  Animated,
-  StyleSheet,
-  ViewStyle,
-  Platform,
-} from 'react-native';
-import React, {useRef} from 'react';
+import {Text, Pressable, StyleSheet, ViewStyle} from 'react-native';
+import React from 'react';
 import {useThemeStore} from '../store/themeStore';
 type Variant = 'contained' | 'outlined' | 'text';
 
@@ -26,16 +19,15 @@ const Button: React.FC<Props> = ({
   disabled,
 }) => {
   const {theme} = useThemeStore();
-  const scaleValue = useRef(new Animated.Value(1)).current;
 
   const variants = (pressed: boolean, variant: Variant) => {
     const v = {
       contained: {
-        backgroundColor: !pressed ? theme.primaryContainer : theme.secondary,
+        backgroundColor: !pressed ? theme.accent : theme.secondary,
       },
       outlined: {
         borderWidth: 1,
-        borderColor: !pressed ? theme.primaryContainer : theme.secondary,
+        borderColor: !pressed ? theme.accent : theme.secondary,
       },
       text: {
         backgroundColor: 'transparent',
@@ -47,14 +39,14 @@ const Button: React.FC<Props> = ({
   const variantText = (pressed: boolean, variant: Variant) => {
     const v = {
       contained: {
-        color: theme.background,
+        color: !pressed ? theme.secondary : theme.accent,
       },
 
       outlined: {
-        color: !pressed ? theme.primary : theme.secondary,
+        color: !pressed ? theme.text : theme.secondary,
       },
       text: {
-        color: theme.primary,
+        color: theme.text,
       },
     };
 
@@ -71,7 +63,7 @@ const Button: React.FC<Props> = ({
 
         disabled
           ? variant !== 'text'
-            ? {backgroundColor: theme.secondaryContainer}
+            ? {backgroundColor: theme.secondary}
             : {backgroundColor: 'transparent'}
           : variants(pressed, variant ?? 'contained'),
       ]}>
@@ -80,10 +72,10 @@ const Button: React.FC<Props> = ({
           style={[
             styles.text,
             disabled
-              ? {color: theme.secondaryContainer}
+              ? {color: theme.accent}
               : variantText(pressed, variant ?? 'contained'),
           ]}>
-          {title}
+          {title.toUpperCase()}
         </Text>
       )}
     </Pressable>
@@ -92,8 +84,7 @@ const Button: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 15,
-    fontWeight: '500',
+    fontFamily: 'NunitoSans_700Bold',
   },
   button: {
     paddingHorizontal: 5,

@@ -43,7 +43,7 @@ const PlayListItem: React.FC<Props> = React.memo(
             },
             track?.title === t.title && {
               borderWidth: 1,
-              borderColor: theme.tertiary,
+              borderColor: theme.accent,
             },
           ]}
         />
@@ -55,10 +55,10 @@ const PlayListItem: React.FC<Props> = React.memo(
             stylePlayListItem.text,
 
             {
-              color: theme.primary,
+              color: theme.text,
             },
             track?.title === t.title && {
-              color: theme.tertiary,
+              color: theme.accent,
             },
           ]}>
           {track?.title}
@@ -87,7 +87,8 @@ const stylePlayListItem = StyleSheet.create({
     height: 50,
   },
   text: {
-    fontSize: 16,
+    fontSize: 18,
+    fontFamily: 'NunitoSans_600SemiBold',
     width: '60%',
   },
 });

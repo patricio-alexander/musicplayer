@@ -16,12 +16,12 @@ const SettingItem: React.FC<Props> = ({title, onPress, iconName}) => {
       style={[style.boxDirectory]}
       activeOpacity={0.75}
       onPress={onPress}>
-      <Icon name={iconName} size={25} color={theme.primary} />
+      <Icon name={iconName} size={25} color={theme.text} />
       <Text
         style={[
           style.text,
           {
-            color: theme.primary,
+            color: theme.text,
           },
         ]}>
         {title}
@@ -38,7 +38,8 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontSize: 20,
+    fontSize: 18,
+    fontFamily: 'NunitoSans_600SemiBold',
     marginLeft: 5,
   },
 });

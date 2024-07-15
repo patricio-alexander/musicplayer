@@ -26,8 +26,20 @@ import {ThemeName} from './src/constants/Colors';
 import {useCheckIsFavorite} from './src/hooks/useCheckIsFavorite';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import 'react-native-gesture-handler';
+import {
+  useFonts,
+  NunitoSans_400Regular,
+  NunitoSans_700Bold,
+  NunitoSans_600SemiBold,
+} from '@expo-google-fonts/nunito-sans';
 
 function App() {
+  let [fontsLoaded] = useFonts({
+    NunitoSans_400Regular,
+    NunitoSans_700Bold,
+    NunitoSans_600SemiBold,
+  });
+
   const isDarkMode = useColorScheme() === 'dark';
 
   const [isPlayerInitialized, setIsPlayerInitialized] =
@@ -156,7 +168,7 @@ function App() {
             screenOptions={{
               headerShown: false,
             }}>
-            {isLoading ? (
+            {isLoading || !fontsLoaded ? (
               <Stack.Screen name="Splash" component={SplashScreen} />
             ) : access ? (
               <Stack.Screen name="Tabs" component={BottomTabs} />

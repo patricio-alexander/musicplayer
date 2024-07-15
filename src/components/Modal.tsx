@@ -34,7 +34,7 @@ const Modal: React.FC<Props> = ({
             styles.modalBody,
             {
               backgroundColor: theme.background,
-              borderColor: theme.primary,
+              borderColor: theme.text,
             },
           ]}>
           {children}

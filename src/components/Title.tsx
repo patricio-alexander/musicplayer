@@ -13,9 +13,9 @@ const Title: React.FC<Props> = ({children, size, style, ...textProps}) => {
   const textStyle = [
     styles.title,
     {
-      color: theme.primary,
+      color: theme.text,
     },
-    {fontSize: size ? size : 20},
+    {fontSize: size ? size : 22},
     style,
   ];
 
@@ -28,8 +28,8 @@ const Title: React.FC<Props> = ({children, size, style, ...textProps}) => {
 
 const styles = StyleSheet.create({
   title: {
-    fontWeight: '700',
     padding: 2,
+    fontFamily: 'NunitoSans_700Bold',
   },
 });
 

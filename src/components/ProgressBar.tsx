@@ -20,16 +20,20 @@ const ProgressBar: React.FC = () => {
           alignItems: 'baseline',
           marginHorizontal: 15,
         }}>
-        <Text style={{color: theme.primary}}>{currentTimeSong}</Text>
-        <Text style={{color: theme.primary}}>{durationTimeSong}</Text>
+        <Text style={{color: theme.text, fontFamily: 'NunitoSans_400Regular'}}>
+          {currentTimeSong}
+        </Text>
+        <Text style={{color: theme.text, fontFamily: 'NunitoSans_400Regular'}}>
+          {durationTimeSong}
+        </Text>
       </View>
       <Slider
         value={position / duration}
         minimumValue={0}
         maximumValue={1}
-        minimumTrackTintColor={theme.tertiary}
+        minimumTrackTintColor={theme.accent}
         maximumTrackTintColor={theme.secondary}
-        thumbTintColor={theme.tertiary}
+        thumbTintColor={theme.accent}
         onValueChange={value => TrackPlayer.seekTo(value * duration)}
       />
     </View>

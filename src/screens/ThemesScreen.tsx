@@ -1,9 +1,7 @@
-import {FlatList, StyleSheet} from 'react-native';
+import {FlatList, StyleSheet, Text} from 'react-native';
 import Container from '../components/Container';
-import Title from '../components/Title';
 import ListItem from '../components/ListItem';
 import CheckBox from '@react-native-community/checkbox';
-import {useEffect, useState} from 'react';
 import {useThemeStore} from '../store/themeStore';
 import {ThemeName} from '../constants/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,6 +18,10 @@ const themes = [
   {
     title: 'Dracula',
     key: 'dracula',
+  },
+  {
+    title: 'Orange',
+    key: 'orange',
   },
 ];
 
@@ -41,12 +43,19 @@ const ThemesScreen = () => {
             <CheckBox
               value={item.key === themeName}
               tintColors={{
-                true: theme.tertiary,
-                false: theme.primary,
+                true: theme.accent,
+                false: theme.text,
               }}
               onValueChange={() => handleChange(item.key)}
             />
-            <Title>{item.title}</Title>
+            <Text
+              style={{
+                fontSize: 18,
+                fontFamily: 'NunitoSans_600SemiBold',
+                color: theme.text,
+              }}>
+              {item.title}
+            </Text>
           </ListItem>
         )}
       />
