@@ -14,7 +14,6 @@ const BottomTabs = () => {
       screenOptions={{
         tabBarActiveTintColor: theme.primary,
         tabBarInactiveTintColor: theme.secondary,
-        headerShown: false,
 
         tabBarStyle: {
           backgroundColor: theme.background,
@@ -34,6 +33,11 @@ const BottomTabs = () => {
         name="Tracks"
         component={TracksScreen}
         options={{
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: theme.background,
+          },
+          headerTitle: 'Minimalist Player',
           title: 'Canciones',
           tabBarIcon: ({color}) => (
             <Icon name="library-music" size={25} color={color} />
@@ -45,6 +49,7 @@ const BottomTabs = () => {
         name="Player"
         component={Player}
         options={{
+          headerShown: false,
           title: 'Reproductor',
           tabBarIcon: ({color}) => (
             <Icon name="play-circle" size={25} color={color} />
@@ -56,6 +61,7 @@ const BottomTabs = () => {
         name="PlayList"
         component={StackPlayLists}
         options={{
+          headerShown: false,
           title: 'Playlist',
           tabBarIcon: ({color}) => (
             <Icon name="queue-music" size={25} color={color} />
@@ -68,6 +74,7 @@ const BottomTabs = () => {
         component={StackSettings}
         options={{
           title: 'Ajustes',
+          headerShown: false,
           tabBarIcon: ({color}) => (
             <Icon name="settings" size={25} color={color} />
           ),

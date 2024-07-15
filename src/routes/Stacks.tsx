@@ -1,11 +1,12 @@
 import SettingsScreen from '../screens/SettingsScreen';
 import PlayListsScreen from '../screens/PlayListsScreen';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import FavoriteScreen from '../screens/FavoriteScreen';
 import {StackParamList} from '../types/ScreenTypes';
 import ThemesScreen from '../screens/ThemesScreen';
 import CustomPlayListScreen from '../screens/CustomPlayListScreen';
 import {useThemeStore} from '../store/themeStore';
-import {createStackNavigator} from '@react-navigation/stack';
+import {Header, createStackNavigator} from '@react-navigation/stack';
 
 const Stack = createStackNavigator<StackParamList>();
 
@@ -25,7 +26,8 @@ const StackPlayLists = () => {
       <Stack.Group
         screenOptions={{
           presentation: 'modal',
-          headerTintColor: theme.tertiary,
+          headerShown: true,
+          headerTintColor: theme.primary,
           headerStyle: {
             backgroundColor: theme.background,
           },

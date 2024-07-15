@@ -11,13 +11,11 @@ import Input from '../components/Input';
 import CheckBox from '@react-native-community/checkbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PlayList} from '../types/SongTypes';
-import {playTrack} from '../../PlaybackService';
+import {playTrack} from '../helpers/musicHelpers';
 import ListItem from '../components/ListItem';
 import IconButton from '../components/IconButton';
 import TrackOptionsModal from '../components/TrackOptionsModal';
 import {Track} from 'react-native-track-player';
-import {getQueue} from 'react-native-track-player/lib/src/trackPlayer';
-import TrackPlayer from 'react-native-track-player';
 
 type SelectedTrack = Track & {
   checked: boolean;
@@ -116,16 +114,6 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
     }
   };
 
-  const loadTracksInTrackPlayer = async () => {
-    const queue = await getQueue();
-    playLists[playListId].tracks.forEach(track => {
-      const isLoad = queue.some(t => t.url === track.url);
-      if (!isLoad) {
-        TrackPlayer.add([track]);
-      }
-    });
-  };
-
   useEffect(() => {
     navigation.setOptions({
       title: playLists[playListId]?.name,
@@ -134,10 +122,6 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
       ),
     });
   }, [navigation, playLists]);
-
-  useEffect(() => {
-    loadTracksInTrackPlayer();
-  }, []);
 
   return (
     <Container>
@@ -244,26 +228,24 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
         onRequestClose={() => setVisibleTracksOptions(false)}
       />
 
-      <View style={{height: '90%'}}>
-        <FlatList
-          data={playLists[playListId]?.tracks}
-          renderItem={({item}) => (
-            <PlayListItem
-              track={item}
-              onPress={async () => {
-                const queue = await getQueue();
-                const id = queue.findIndex(track => track.url === item.url);
-                playTrack({id});
-                setPlayListId(playListId.toString());
-              }}
-              onPressIcon={() => {
-                setSelectedTrack(item);
-                setVisibleTracksOptions(true);
-              }}
-            />
-          )}
-        />
-      </View>
+      <FlatList
+        data={playLists[playListId]?.tracks}
+        contentContainerStyle={{paddingBottom: 100}}
+        renderItem={({item}) => (
+          <PlayListItem
+            track={item}
+            onPress={async () => {
+              const id = tracks.findIndex(track => track.url === item.url);
+              playTrack({id});
+              setPlayListId(playListId.toString());
+            }}
+            onPressIcon={() => {
+              setSelectedTrack(item);
+              setVisibleTracksOptions(true);
+            }}
+          />
+        )}
+      />
     </Container>
   );
 };

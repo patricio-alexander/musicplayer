@@ -14,13 +14,12 @@ import {useThemeStore} from '../store/themeStore';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
-  const favorites = useQueueStore(state => state.favorites);
   const [visible, setVisible] = useState<boolean>(false);
   const [namePlayList, setNamePlayList] = useState('');
-  const playLists = useQueueStore(state => state.playLists);
-  const setPlayLists = useQueueStore(state => state.setPlayLists);
   const {theme} = useThemeStore();
   const insets = useSafeAreaInsets();
+
+  const {favorites, playLists, setPlayLists, setPlayListId} = useQueueStore();
 
   const addPlayList = async () => {
     const data = {
@@ -87,9 +86,10 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
             <BoxPlayList
               key={index}
               icon="playlist-music"
-              onPress={() =>
-                navigation.navigate('CustomPlayList', {playListId: index})
-              }>
+              onPress={() => {
+                setPlayListId(index.toString());
+                navigation.navigate('CustomPlayList', {playListId: index});
+              }}>
               <Title>{item.name}</Title>
               <Text
                 style={[

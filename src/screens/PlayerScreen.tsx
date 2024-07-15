@@ -1,4 +1,4 @@
-import {StyleSheet, View, Image, StatusBar, Animated} from 'react-native';
+import {StyleSheet, View, Text, Image, StatusBar, Animated} from 'react-native';
 import {useQueueStore} from '../store/queueStore';
 import ProgressBar from '../components/ProgressBar';
 import PlayerControls from '../components/PlayerControls';
@@ -10,7 +10,7 @@ import {useThemeStore} from '../store/themeStore';
 import {useEffect, useRef} from 'react';
 
 const PlayerScreen = () => {
-  const track = useQueueStore(state => state.track);
+  const {track, playListId, playLists} = useQueueStore();
   const img =
     typeof track.artwork === 'string'
       ? track.artwork
@@ -56,17 +56,28 @@ const PlayerScreen = () => {
           style={[StyleSheet.absoluteFillObject]}
           colors={
             gradient
-              ? [gradient?.average, gradient?.dominant]
+              ? [gradient?.dominant, theme.background]
               : [theme.background, theme.background]
           }
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
         />
       </Animated.View>
       <View style={style.wrapperImage}>
+        <View style={{alignItems: 'center', marginBottom: 20}}>
+          <Title>Reproduciendo</Title>
+          <Text style={[style.namePlayList, {color: theme.tertiary}]}>
+            {!playListId
+              ? 'Canciones del dispositivo'
+              : playLists[Number(playListId)].name}
+          </Text>
+        </View>
+
         <Image
           source={{uri: img}}
           style={{
-            width: '100%',
-            height: '60%',
+            width: '90%',
+            height: '65%',
             resizeMode: 'cover',
             shadowColor: '#000',
             borderRadius: 10,
@@ -99,6 +110,10 @@ const style = StyleSheet.create({
 
   gradient: {
     position: 'absolute',
+  },
+
+  namePlayList: {
+    fontSize: 15,
   },
 
   title: {

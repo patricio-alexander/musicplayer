@@ -1,27 +1,23 @@
 import {StyleSheet, VirtualizedList} from 'react-native';
 import PlayListItem from '../components/PlayListItem';
-import {playTrack} from '../../PlaybackService';
+import {playTrack} from '../helpers/musicHelpers';
 import {useQueueStore} from '../store/queueStore';
 import Container from '../components/Container';
 import {useState} from 'react';
 import TrackOptionsModal from '../components/TrackOptionsModal';
 import {Track} from 'react-native-track-player';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const TracksScreen = () => {
   const {tracks, setPlayListId} = useQueueStore();
   const [trackSelected, setTrackSelected] = useState<Track | null>(null);
   const [visible, setVisible] = useState<boolean>(false);
-  const insets = useSafeAreaInsets();
 
   const renderItem = ({item}: {item: Track}) => {
     return (
       <PlayListItem
         track={item}
         onPress={async () => {
-          const id = tracks.findIndex(track => track.url === item.url);
-
-          playTrack({id});
+          playTrack({id: item.id});
           setPlayListId('');
         }}
         onPressIcon={() => {
@@ -33,7 +29,7 @@ const TracksScreen = () => {
   };
 
   return (
-    <Container style={{paddingTop: insets.top}}>
+    <Container>
       <TrackOptionsModal
         visible={visible}
         onRequestClose={() => setVisible(false)}
@@ -46,7 +42,6 @@ const TracksScreen = () => {
         initialNumToRender={20}
         keyExtractor={(_, index) => index.toString()}
         contentContainerStyle={[styles.list]}
-        // onEndReached={loadData}
         getItem={(data, i) => data[i]}
         renderItem={renderItem}
       />

@@ -68,13 +68,15 @@ function App() {
       if (newTracks.length) {
         console.log(tracks);
         allTracks = [...allTracks, ...newTracks];
-        await TrackPlayer.add(newTracks);
         offset += 20;
       } else {
         break;
       }
     }
-    setTracks(allTracks);
+    const mapped = allTracks.map((track, i) => ({...track, id: i}));
+
+    await TrackPlayer.add(mapped);
+    setTracks(mapped);
   };
 
   const checkPlayLists = async () => {

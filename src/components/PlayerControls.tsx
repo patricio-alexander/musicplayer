@@ -4,8 +4,11 @@ import React from 'react';
 import TrackPlayer, {useIsPlaying} from 'react-native-track-player';
 import {useQueueStore} from '../store/queueStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {playTrack} from '../../PlaybackService';
+import {playTrack} from '../helpers/musicHelpers';
+import {randomTrackInCustomPlayList} from '../helpers/musicHelpers';
 import {useThemeStore} from '../store/themeStore';
+import {ToastAndroid} from 'react-native';
+import {randomIdTrack} from '../helpers/musicHelpers';
 
 type Props = {
   style?: ViewStyle;
@@ -26,29 +29,18 @@ const PlayerControls: React.FC<Props> = ({style}) => {
   const {playing} = useIsPlaying();
   const {theme} = useThemeStore();
 
-  const randomIdTrack = ({max}: {max: number}) =>
-    Math.floor(Math.random() * max);
-
   // 1 cuando el reproduccion aleatoria esta activada y 0 cuando no
   const randomTracks = async () => {
     if (isRandom) {
       setIsRandom(false);
       await AsyncStorage.removeItem('randomtracks');
+      ToastAndroid.show('Modo aleatorio desactivado', ToastAndroid.LONG);
       return;
     }
     setIsRandom(true);
+    ToastAndroid.show('Modo aleatorio activado', ToastAndroid.LONG);
 
     await AsyncStorage.setItem('randomtracks', '1');
-  };
-
-  const randomTrackInCustomPlayList = () => {
-    const playList = playLists[Number(playListId)];
-
-    const randomIndex = randomIdTrack({
-      max: playList.tracks.length,
-    });
-
-    playTrack({id: randomIndex});
   };
 
   const skipPrevious = async () => {
@@ -56,7 +48,7 @@ const PlayerControls: React.FC<Props> = ({style}) => {
 
     if (isRandom) {
       if (playListId) {
-        randomTrackInCustomPlayList();
+        randomTrackInCustomPlayList({playList});
         return;
       }
 
@@ -92,7 +84,7 @@ const PlayerControls: React.FC<Props> = ({style}) => {
 
     if (isRandom) {
       if (playListId) {
-        randomTrackInCustomPlayList();
+        randomTrackInCustomPlayList({playList});
         return;
       }
       const id = randomIdTrack({max: tracks.length});

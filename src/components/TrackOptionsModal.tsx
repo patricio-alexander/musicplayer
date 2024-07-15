@@ -49,10 +49,6 @@ const TrackOptionsModal: React.FC<Props> = ({
     setSelectedPlayLists(mapped);
   };
 
-  const showToast = (playListName: string) => {
-    ToastAndroid.show(`Se añadido a "${playListName}"`, ToastAndroid.LONG);
-  };
-
   const addTrackInPlayList = async ({playListName}: {playListName: string}) => {
     if (!track) return;
     const index = playLists.findIndex(
@@ -61,16 +57,11 @@ const TrackOptionsModal: React.FC<Props> = ({
 
     const exist = playLists[index].tracks.some(tr => tr.url === track.url);
     if (exist) {
-      Alert.alert(
-        'Canción encontrada',
-        'Ya se encuentra en la lista de reprducción.',
-        [
-          {
-            text: 'Aceptar',
-            onPress: () => console.log('Aceptar'),
-          },
-        ],
+      ToastAndroid.show(
+        'Ya se encuentra en la lista de reproducción.',
+        ToastAndroid.LONG,
       );
+
       // aqui un alert
       return;
     }
@@ -78,7 +69,8 @@ const TrackOptionsModal: React.FC<Props> = ({
     const lists = [...playLists];
     lists[index].tracks.push(track);
     setPlayLists(lists);
-    showToast(playListName);
+
+    ToastAndroid.show(`Se añadido a "${playListName}"`, ToastAndroid.LONG);
     await AsyncStorage.setItem('playLists', JSON.stringify(lists));
   };
 
@@ -104,6 +96,7 @@ const TrackOptionsModal: React.FC<Props> = ({
           )}
         />
       </Modal>
+
       <Modal
         visible={visible}
         animationType="fade"
@@ -121,9 +114,6 @@ const TrackOptionsModal: React.FC<Props> = ({
             loadPlayLists();
           }}>
           <Text style={[styles.text, {color: theme.primary}]}>Agregar a</Text>
-        </ListItem>
-        <ListItem icon="delete">
-          <Text style={[styles.text, {color: theme.primary}]}>Eliminar</Text>
         </ListItem>
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
           <IconButton
