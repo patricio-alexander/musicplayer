@@ -59,8 +59,8 @@ const WelcomeScreen = () => {
     <Container style={{paddingTop: insets.top}}>
       <Title style={{marginTop: 30, marginHorizontal: 20}}>Bienvenido</Title>
       <Text style={styles.text}>
-        Minimalist Player es un reproductor sin conexión para que reproducir
-        archivos de auido de su dispositivo.
+        Minimalist Player es un reproductor sin conexión para reproducir
+        archivos de audio de su dispositivo.
       </Text>
 
       <Button

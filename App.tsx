@@ -75,10 +75,8 @@ function App() {
     let offset = 0;
     let allTracks: Track[] = [];
     while (true) {
-      console.log(offset);
       const newTracks = await tracksFromDevice({offset: offset});
       if (newTracks.length) {
-        console.log(tracks);
         allTracks = [...allTracks, ...newTracks];
         offset += 20;
       } else {

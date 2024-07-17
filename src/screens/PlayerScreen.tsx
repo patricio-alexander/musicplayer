@@ -120,6 +120,7 @@ const style = StyleSheet.create({
   },
 
   title: {
+    textAlign: 'center',
     width: '100%',
     marginTop: 30,
   },

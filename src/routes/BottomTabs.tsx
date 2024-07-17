@@ -17,7 +17,7 @@ const BottomTabs = () => {
         headerTitleStyle: {
           fontFamily: 'NunitoSans_700Bold',
         },
-
+        tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: theme.background,
           borderTopLeftRadius: 20,
@@ -41,9 +41,8 @@ const BottomTabs = () => {
             backgroundColor: theme.background,
           },
           headerTitle: 'Minimalist Player',
-          title: 'Canciones',
           tabBarIcon: ({color}) => (
-            <Icon name="music-box-outline" size={25} color={color} />
+            <Icon name="music-box-outline" size={28} color={color} />
           ),
         }}
       />
@@ -53,9 +52,8 @@ const BottomTabs = () => {
         component={Player}
         options={{
           headerShown: false,
-          title: 'Reproductor',
           tabBarIcon: ({color}) => (
-            <Icon name="play-circle-outline" size={25} color={color} />
+            <Icon name="play-circle-outline" size={28} color={color} />
           ),
         }}
       />
@@ -65,9 +63,8 @@ const BottomTabs = () => {
         component={StackPlayLists}
         options={{
           headerShown: false,
-          title: 'Playlist',
           tabBarIcon: ({color}) => (
-            <Icon name="playlist-music-outline" size={25} color={color} />
+            <Icon name="playlist-music-outline" size={28} color={color} />
           ),
         }}
       />
@@ -76,9 +73,8 @@ const BottomTabs = () => {
         name="Setting"
         component={StackSettings}
         options={{
-          title: 'Ajustes',
           headerShown: false,
-          tabBarIcon: ({color}) => <Icon name="cog" size={25} color={color} />,
+          tabBarIcon: ({color}) => <Icon name="cog" size={28} color={color} />,
         }}
       />
     </Tab.Navigator>

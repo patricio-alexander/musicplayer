@@ -7,19 +7,19 @@ export const THEME = {
   },
   orange: {
     text: '#e5e5e5',
-    secondary: '#7b7b7b',
+    secondary: '#3d3446',
     accent: '#ffb86c',
     background: '#0e0c10',
   },
   catppuccin: {
     text: '#cdd6f4',
-    secondary: '#7f849c',
+    secondary: '#2f304b',
     accent: '#a6e3a1',
     background: '#11111b',
   },
   dracula: {
     text: '#F8F8F2',
-    secondary: '#6272A4',
+    secondary: '#343746',
     accent: '#50FA7B',
     background: '#282A36',
   },
