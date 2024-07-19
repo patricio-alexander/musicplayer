@@ -10,7 +10,7 @@ import {useThemeStore} from '../store/themeStore';
 import {useEffect, useRef} from 'react';
 
 const PlayerScreen = () => {
-  const {track, playListId, playLists} = useQueueStore();
+  const {track, playListId, playLists, playingFavorites} = useQueueStore();
   const img =
     typeof track.artwork === 'string'
       ? track.artwork
@@ -28,20 +28,32 @@ const PlayerScreen = () => {
   const fadeIn = () => {
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 600,
+      duration: 500,
       useNativeDriver: true,
     }).start();
   };
 
   useEffect(() => {
-    fadeAnim.setValue(1);
+    fadeAnim.setValue(0.4);
     if (isFocused && typeof track.artwork === 'string') {
-      fadeAnim.setValue(0);
-
       fadeIn();
       return;
+    } else {
+      fadeAnim.setValue(1);
     }
   }, [isFocused, track]);
+
+  const currentPlayListPlaying = () => {
+    if (playingFavorites) {
+      return 'Favoritos';
+    }
+
+    if (!playListId) {
+      return 'Cancines del dispositivo';
+    } else {
+      return playLists[Number(playListId)].name;
+    }
+  };
 
   return (
     <>
@@ -69,9 +81,7 @@ const PlayerScreen = () => {
         <View style={{alignItems: 'center', marginBottom: 20}}>
           <Title>Reproduciendo</Title>
           <Text style={[style.namePlayList, {color: theme.accent}]}>
-            {!playListId
-              ? 'Canciones del dispositivo'
-              : playLists[Number(playListId)].name}
+            {currentPlayListPlaying()}
           </Text>
         </View>
 

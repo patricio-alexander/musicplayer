@@ -8,7 +8,7 @@ import TrackOptionsModal from '../components/TrackOptionsModal';
 import {Track} from 'react-native-track-player';
 
 const TracksScreen = () => {
-  const {tracks, setPlayListId} = useQueueStore();
+  const {tracks, setPlayListId, setPlayingFavorites} = useQueueStore();
   const [trackSelected, setTrackSelected] = useState<Track | null>(null);
   const [visible, setVisible] = useState<boolean>(false);
 
@@ -19,6 +19,7 @@ const TracksScreen = () => {
         onPress={async () => {
           playTrack({id: item.id});
           setPlayListId('');
+          setPlayingFavorites(false);
         }}
         onPressIcon={() => {
           setVisible(true);

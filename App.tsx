@@ -49,7 +49,7 @@ function App() {
 
   const {access, setAccess} = useAccess();
 
-  const {setTrack, tracks, setPlayLists, setIsRandom, setFavorites, setTracks} =
+  const {setTrack, setPlayLists, setIsRandom, setFavorites, setTracks} =
     useQueueStore();
 
   const {checkIsFavorite} = useCheckIsFavorite();

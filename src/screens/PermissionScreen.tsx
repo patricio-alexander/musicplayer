@@ -33,7 +33,6 @@ const WelcomeScreen = () => {
           let allTracks: Track[] = [];
           setLoading(true);
           while (true) {
-            console.log(offset);
             const newTracks = await tracksFromDevice({offset: offset});
             if (newTracks.length) {
               allTracks = [...allTracks, ...newTracks];

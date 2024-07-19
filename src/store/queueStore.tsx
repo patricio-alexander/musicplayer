@@ -10,6 +10,8 @@ type QueueStore = {
   isFavorite: boolean;
   isRandom: boolean;
   playLists: PlayList[];
+  playingFavorites: boolean;
+  setPlayingFavorites: (playing: boolean) => void;
   playListId: string;
   track: Track;
   markFavorite: (track: Track | null) => Promise<void>;
@@ -28,8 +30,10 @@ export const useQueueStore = create<QueueStore>()((set, get) => ({
   favorites: [],
   isFavorite: false,
   isRandom: false,
+  playingFavorites: false,
   playLists: [],
   playListId: '',
+  setPlayingFavorites: playing => set({playingFavorites: playing}),
   track: {id: 0, title: '', artwork: require('../assets/player.png'), url: ''},
   setTrack: track => set({track}),
   setPlayListId: id => set({playListId: id}),

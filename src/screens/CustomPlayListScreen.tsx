@@ -17,7 +17,7 @@ import IconButton from '../components/IconButton';
 import TrackOptionsModal from '../components/TrackOptionsModal';
 import {Track} from 'react-native-track-player';
 
-type SelectedTrack = Track & {
+export type SelectedTrack = Track & {
   checked: boolean;
 };
 
@@ -35,7 +35,7 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
     useState<boolean>(false);
   const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
 
-  const {setPlayLists, setPlayListId} = useQueueStore();
+  const {setPlayLists, setPlayListId, setPlayingFavorites} = useQueueStore();
 
   const onChangeCheckBox = ({url}: {url: string}) => {
     const newSelectedTracks = checkedTracks.map(track => {
@@ -239,6 +239,7 @@ const CustomPlayListScreen = ({navigation, route}: CustomPlayListProps) => {
           <PlayListItem
             track={item}
             onPress={async () => {
+              setPlayingFavorites(false);
               const id = tracks.findIndex(track => track.url === item.url);
               playTrack({id});
               setPlayListId(playListId.toString());

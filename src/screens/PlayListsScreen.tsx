@@ -19,7 +19,13 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
   const {theme} = useThemeStore();
   const insets = useSafeAreaInsets();
 
-  const {favorites, playLists, setPlayLists, setPlayListId} = useQueueStore();
+  const {
+    favorites,
+    playLists,
+    setPlayingFavorites,
+    setPlayLists,
+    setPlayListId,
+  } = useQueueStore();
 
   const addPlayList = async () => {
     const data = {
@@ -68,7 +74,9 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
 
         <BoxPlayList
           icon="star"
-          onPress={() => navigation.navigate('Favorites')}>
+          onPress={() => {
+            navigation.navigate('Favorites');
+          }}>
           <Title>Canciones favoritas</Title>
           <Text
             style={[

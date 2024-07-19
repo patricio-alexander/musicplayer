@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {THEME} from '../constants/Colors';
 import {useThemeStore} from '../store/themeStore';
 
 type Props = {
