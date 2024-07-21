@@ -7,10 +7,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import {usePlayerBackgrounGradient} from '../hooks/usePlayerBackgroundGradient';
 import {useIsFocused} from '@react-navigation/native';
 import {useThemeStore} from '../store/themeStore';
-import {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
+import StatusPlaying from '../components/StatusPlaying';
 
 const PlayerScreen = () => {
-  const {track, playListId, playLists, playingFavorites} = useQueueStore();
+  const {track} = useQueueStore();
   const [focus, setFocus] = useState(false);
   const img =
     typeof track.artwork === 'string'
@@ -47,18 +48,6 @@ const PlayerScreen = () => {
     setFocus(false);
   }, [isFocused, track]);
 
-  const currentPlayListPlaying = () => {
-    if (playingFavorites) {
-      return 'Favoritos';
-    }
-
-    if (!playListId) {
-      return 'Cancines del dispositivo';
-    } else {
-      return playLists[Number(playListId)].name;
-    }
-  };
-
   return (
     <>
       <Animated.View
@@ -84,9 +73,13 @@ const PlayerScreen = () => {
       <View style={style.wrapperImage}>
         <View style={{alignItems: 'center', marginBottom: 20}}>
           <Title>Reproduciendo</Title>
-          <Text style={[style.namePlayList, {color: theme.accent}]}>
-            {currentPlayListPlaying()}
-          </Text>
+          <StatusPlaying />
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              gap: 5,
+            }}></View>
         </View>
 
         <Image
@@ -126,11 +119,6 @@ const style = StyleSheet.create({
 
   gradient: {
     position: 'absolute',
-  },
-
-  namePlayList: {
-    fontSize: 16,
-    fontFamily: 'NunitoSans_400Regular',
   },
 
   title: {
