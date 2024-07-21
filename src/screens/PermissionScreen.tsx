@@ -1,4 +1,4 @@
-import {PermissionsAndroid, StyleSheet, Text} from 'react-native';
+import {Alert, PermissionsAndroid, StyleSheet, Text} from 'react-native';
 import Container from '../components/Container';
 import Button from '../components/Button';
 import {useAccess} from '../store/accessStore';
@@ -27,11 +27,11 @@ const WelcomeScreen = () => {
       );
 
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        setLoading(true);
         const init = await initizalizedPlayer();
         if (init) {
           let offset = 0;
           let allTracks: Track[] = [];
-          setLoading(true);
           while (true) {
             const newTracks = await tracksFromDevice({offset: offset});
             if (newTracks.length) {
@@ -44,22 +44,28 @@ const WelcomeScreen = () => {
           const mapped = allTracks.map((track, i) => ({...track, id: i}));
 
           await TrackPlayer.add(mapped);
+
           setTracks(mapped);
-          setLoading(false);
           setAccess(true);
         }
       }
     } catch (error) {
       console.error(error);
+      Alert.alert('Opps...', `Al parecer ocurrio un error ${error}`, [
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ]);
+      setLoading(false);
     }
   };
 
   return (
     <Container style={{paddingTop: insets.top}}>
-      <Title style={{marginTop: 30, marginHorizontal: 20}}>Bienvenido</Title>
+      <Title style={{marginTop: 30, marginHorizontal: 20}}>
+        ¡Es un placer tenerte por aquí! 🎉
+      </Title>
       <Text style={styles.text}>
-        Minimalist Player es un reproductor sin conexión para reproducir
-        archivos de audio de su dispositivo.
+        Bienvenido a Minimalist Player, es un reproductor de música sin conexión
+        para reproducir archivos de audio almacenados de su dispositivo.
       </Text>
 
       <Button

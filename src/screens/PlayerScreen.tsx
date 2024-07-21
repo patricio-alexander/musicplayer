@@ -1,4 +1,4 @@
-import {StyleSheet, View, Text, Image, StatusBar, Animated} from 'react-native';
+import {StyleSheet, View, Image, StatusBar, Animated} from 'react-native';
 import {useQueueStore} from '../store/queueStore';
 import ProgressBar from '../components/ProgressBar';
 import PlayerControls from '../components/PlayerControls';

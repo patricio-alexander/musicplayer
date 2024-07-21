@@ -117,8 +117,8 @@ const FavoriteScreen = ({navigation}: FavoriteScreenProps) => {
         <Button
           title="Agregar"
           onPress={() => {
+            setVisibleOptions(false);
             addToFavorite();
-            //setVisibleOptions(false);
           }}
         />
       </Modal>

@@ -19,13 +19,7 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
   const {theme} = useThemeStore();
   const insets = useSafeAreaInsets();
 
-  const {
-    favorites,
-    playLists,
-    setPlayingFavorites,
-    setPlayLists,
-    setPlayListId,
-  } = useQueueStore();
+  const {favorites, playLists, setPlayLists} = useQueueStore();
 
   const addPlayList = async () => {
     const data = {
@@ -95,7 +89,6 @@ const PlayListsScreen = ({navigation}: PlayListScreenProps) => {
               key={index}
               icon="playlist-music"
               onPress={() => {
-                setPlayListId(index.toString());
                 navigation.navigate('CustomPlayList', {playListId: index});
               }}>
               <Title>{item.name}</Title>
