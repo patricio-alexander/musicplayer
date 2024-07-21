@@ -7,10 +7,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import {usePlayerBackgrounGradient} from '../hooks/usePlayerBackgroundGradient';
 import {useIsFocused} from '@react-navigation/native';
 import {useThemeStore} from '../store/themeStore';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 const PlayerScreen = () => {
   const {track, playListId, playLists, playingFavorites} = useQueueStore();
+  const [focus, setFocus] = useState(false);
   const img =
     typeof track.artwork === 'string'
       ? track.artwork
@@ -34,13 +35,16 @@ const PlayerScreen = () => {
   };
 
   useEffect(() => {
-    fadeAnim.setValue(0.4);
     if (isFocused && typeof track.artwork === 'string') {
+      fadeAnim.setValue(0);
+      setFocus(true);
       fadeIn();
+
       return;
-    } else {
-      fadeAnim.setValue(1);
     }
+
+    fadeAnim.setValue(1);
+    setFocus(false);
   }, [isFocused, track]);
 
   const currentPlayListPlaying = () => {
@@ -69,7 +73,7 @@ const PlayerScreen = () => {
         <LinearGradient
           style={[StyleSheet.absoluteFillObject]}
           colors={
-            gradient
+            gradient && focus
               ? [gradient?.dominant, gradient?.average]
               : [theme.background, theme.background]
           }
