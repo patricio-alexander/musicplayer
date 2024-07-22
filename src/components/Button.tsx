@@ -72,7 +72,7 @@ const Button: React.FC<Props> = ({
           style={[
             styles.text,
             disabled
-              ? {color: theme.secondary}
+              ? {color: theme.tertiary}
               : variantText(pressed, variant ?? 'contained'),
           ]}>
           {title.toUpperCase()}
