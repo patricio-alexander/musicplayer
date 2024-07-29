@@ -22,7 +22,7 @@ export const tracksFromDevice = async ({
   });
 
   const arraysong = [...songsOrError];
-  const tracks = arraysong.map((file: any, i) => ({
+  const tracks = arraysong.map((file: any) => ({
     title: file?.title,
     url: `file://${file?.url}`,
     artwork: file?.cover ? file.cover : require('../assets/player.png'),

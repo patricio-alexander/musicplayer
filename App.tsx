@@ -87,6 +87,11 @@ function App() {
 
     await TrackPlayer.add(mapped);
     setTracks(mapped);
+    const lastSong = await AsyncStorage.getItem('lastSong');
+    if (lastSong) {
+      const id = mapped.findIndex(track => track.url === lastSong);
+      TrackPlayer.skip(id);
+    }
   };
 
   const checkPlayLists = async () => {

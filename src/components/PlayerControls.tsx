@@ -54,7 +54,7 @@ const PlayerControls: React.FC<Props> = ({style}) => {
       />
       <IconButton name="skip-previous" size={45} onPress={skipPrevious} />
       <IconButton
-        name={playing ? 'play' : 'pause'}
+        name={playing ? 'pause' : 'play'}
         size={playing ? 35 : 35}
         style={{backgroundColor: theme.accent}}
         color={theme.secondary}
