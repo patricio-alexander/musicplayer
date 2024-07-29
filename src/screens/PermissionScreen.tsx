@@ -1,4 +1,10 @@
-import {Alert, PermissionsAndroid, StyleSheet, Text} from 'react-native';
+import {
+  Alert,
+  PermissionsAndroid,
+  Platform,
+  StyleSheet,
+  Text,
+} from 'react-native';
 import Container from '../components/Container';
 import Button from '../components/Button';
 import {useAccess} from '../store/accessStore';
@@ -22,38 +28,65 @@ const WelcomeScreen = () => {
 
   const requestAudioMusicPermissions = async () => {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO,
-      );
+      let granted;
 
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        setLoading(true);
-        const init = await initizalizedPlayer();
-        if (init) {
-          let offset = 0;
-          let allTracks: Track[] = [];
-          while (true) {
-            const newTracks = await tracksFromDevice({offset: offset});
-            if (newTracks.length) {
-              allTracks = [...allTracks, ...newTracks];
-              offset += 20;
-            } else {
-              break;
-            }
-          }
-          const mapped = allTracks.map((track, i) => ({...track, id: i}));
+      if (Number(Platform.Version) >= 33) {
+        granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO,
+        );
+      } else if (Number(Platform.Version) >= 30) {
+        granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        );
+      } else {
+        granted = await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        ]);
 
-          await TrackPlayer.add(mapped);
+        const isGranted =
+          typeof granted === 'string'
+            ? granted === PermissionsAndroid.RESULTS.GRANTED
+            : granted[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] ===
+                PermissionsAndroid.RESULTS.GRANTED &&
+              granted[PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE] ===
+                PermissionsAndroid.RESULTS.GRANTED;
 
-          setTracks(mapped);
-          setAccess(true);
+        if (!isGranted) {
+          Alert.alert(
+            'Permiso denegado',
+            'No se pudo obtener permiso para acceder a los archivos de audio.',
+          );
+          return;
         }
+      }
+      setLoading(true);
+      const init = await initizalizedPlayer();
+      if (init) {
+        let offset = 0;
+        let allTracks: Track[] = [];
+        while (true) {
+          const newTracks = await tracksFromDevice({offset: offset});
+          if (newTracks.length) {
+            allTracks = [...allTracks, ...newTracks];
+            offset += 20;
+          } else {
+            break;
+          }
+        }
+        const mapped = allTracks.map((track, i) => ({...track, id: i}));
+
+        await TrackPlayer.add(mapped);
+
+        setTracks(mapped);
+        setAccess(true);
       }
     } catch (error) {
       console.error(error);
       Alert.alert('Opps...', `Al parecer ocurrio un error ${error}`, [
         {text: 'OK', onPress: () => console.log('OK Pressed')},
       ]);
+    } finally {
       setLoading(false);
     }
   };
@@ -63,7 +96,7 @@ const WelcomeScreen = () => {
       <Title style={{marginTop: 30, marginHorizontal: 20}}>
         ¡Es un placer tenerte por aquí! 🎉
       </Title>
-      <Text style={styles.text}>
+      <Text style={[styles.text, {color: theme.text}]}>
         Bienvenido a Minimalist Player, es un reproductor de música sin conexión
         para reproducir archivos de audio almacenados de su dispositivo.
       </Text>
