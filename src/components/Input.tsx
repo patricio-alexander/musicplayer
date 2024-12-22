@@ -26,6 +26,7 @@ const Input: React.FC<Props> = ({placeholder, onChangeText, value, styles}) => {
       placeholder={placeholder}
       onChangeText={valueText => onChangeText(valueText)}
       value={value}
+      placeholderTextColor={theme.text}
     />
   );
 };

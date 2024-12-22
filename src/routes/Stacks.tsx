@@ -36,7 +36,11 @@ const StackPlayLists = () => {
             backgroundColor: theme.background,
           },
         }}>
-        <Stack.Screen name="Favorites" component={FavoriteScreen} />
+        <Stack.Screen
+          name="Favorites"
+          options={{headerTitle: 'Canciones favoritas'}}
+          component={FavoriteScreen}
+        />
         <Stack.Screen name="CustomPlayList" component={CustomPlayListScreen} />
       </Stack.Group>
     </Stack.Navigator>

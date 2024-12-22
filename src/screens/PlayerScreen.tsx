@@ -67,28 +67,21 @@ const PlayerScreen = () => {
               : [theme.background, theme.background]
           }
           start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
+          end={{x: 1.5, y: 1.5}}
         />
       </Animated.View>
       <View style={style.wrapperImage}>
-        <View style={{alignItems: 'center', marginBottom: 20}}>
+        <View style={{alignItems: 'center', marginBottom: 20, marginTop: 20}}>
           <Title>Reproduciendo</Title>
           <StatusPlaying />
-          <View
-            style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              gap: 5,
-            }}></View>
         </View>
 
         <Image
           source={{uri: img}}
           style={{
-            width: '90%',
-            height: '65%',
+            width: '100%',
+            height: '50%',
             resizeMode: 'cover',
-
             borderRadius: 10,
           }}
         />
@@ -104,16 +97,9 @@ const PlayerScreen = () => {
 };
 
 const style = StyleSheet.create({
-  wrapper: {
-    paddingHorizontal: 13,
-    justifyContent: 'center',
-  },
-
   wrapperImage: {
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-    height: '60%',
+    justifyContent: 'space-evenly',
     padding: 30,
   },
 

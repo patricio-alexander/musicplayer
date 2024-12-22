@@ -20,16 +20,10 @@ const BottomTabs = () => {
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: theme.background,
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-          position: 'absolute',
+          borderColor: theme.accent,
           paddingBottom: 5,
           paddingTop: 3,
           height: 55,
-        },
-        tabBarLabelStyle: {
-          fontFamily: 'NunitoSans_700Bold',
-          fontSize: 12,
         },
       }}>
       <Tab.Screen
@@ -37,6 +31,7 @@ const BottomTabs = () => {
         component={TracksScreen}
         options={{
           headerShown: true,
+          headerTintColor: theme.text,
           headerStyle: {
             backgroundColor: theme.background,
           },

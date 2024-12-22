@@ -4,7 +4,6 @@ import {useQueueStore} from '../store/queueStore';
 import {Track} from 'react-native-track-player';
 import React from 'react';
 import {Image} from 'react-native';
-import IconButton from './IconButton';
 import {useThemeStore} from '../store/themeStore';
 import {useCheckIsFavorite} from '../hooks/useCheckIsFavorite';
 
@@ -30,16 +29,19 @@ const PlayListItem: React.FC<Props> = React.memo(
       <TouchableOpacity
         activeOpacity={0.8}
         style={[stylePlayListItem.container]}
-        onPress={onPress}>
+        onPress={onPress}
+        onLongPress={() => {
+          checkIsFavorite(track);
+          onPressIcon?.();
+        }}>
         <Image
           source={{uri: img}}
           style={[
             {
-              width: 50,
+              width: '20%',
               resizeMode: 'cover',
               height: '100%',
-              marginRight: 6,
-              borderRadius: 100,
+              borderRadius: 10,
             },
             track?.title === t.title && {
               borderWidth: 1,
@@ -63,13 +65,6 @@ const PlayListItem: React.FC<Props> = React.memo(
           ]}>
           {track?.title}
         </Text>
-        <IconButton
-          name="dots-horizontal"
-          onPress={() => {
-            checkIsFavorite(track);
-            onPressIcon?.();
-          }}
-        />
       </TouchableOpacity>
     );
   },
@@ -81,7 +76,7 @@ const stylePlayListItem = StyleSheet.create({
     borderRadius: 10,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    gap: 10,
     alignItems: 'center',
     width: '100%',
     height: 50,

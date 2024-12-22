@@ -1,4 +1,4 @@
-import {FlatList, StyleSheet, Text} from 'react-native';
+import {FlatList, StyleSheet, Text, TextInput} from 'react-native';
 import {useQueueStore} from '../store/queueStore';
 import PlayListItem from '../components/PlayListItem';
 import {playTrack} from '../helpers/musicHelpers';
@@ -16,6 +16,7 @@ import {SelectedTrack} from './CustomPlayListScreen';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useThemeStore} from '../store/themeStore';
 
 const FavoriteScreen = ({navigation}: FavoriteScreenProps) => {
   const {favorites, tracks, setFavorites, setPlayingFavorites, setPlayListId} =
@@ -25,6 +26,7 @@ const FavoriteScreen = ({navigation}: FavoriteScreenProps) => {
   const [visibleOptions, setVisibleOptions] = useState(false);
   const [checkedTracks, setCheckedTracks] = useState<Array<SelectedTrack>>([]);
   const [search, setSearch] = useState('');
+  const {theme} = useThemeStore();
 
   const onChangeCheckBox = ({url}: {url: string}) => {
     const newSelectedTracks = checkedTracks.map(track => {
@@ -91,12 +93,8 @@ const FavoriteScreen = ({navigation}: FavoriteScreenProps) => {
         onRequestClose={() => setVisibleOptions(false)}
         animationType="slide">
         <Title>Canciones</Title>
-        <Input
-          placeholder="Buscar"
-          value={search}
-          onChangeText={setSearch}
-          styles={styles.input}
-        />
+
+        <Input placeholder="Buscar" value={search} onChangeText={setSearch} />
 
         <FlatList
           style={styles.flatList}
@@ -106,9 +104,16 @@ const FavoriteScreen = ({navigation}: FavoriteScreenProps) => {
               <CheckBox
                 style={styles.checkBox}
                 value={item.checked}
+                tintColors={{
+                  true: theme.accent,
+                  false: theme.text,
+                }}
                 onValueChange={() => onChangeCheckBox({url: item.url})}
               />
-              <Text numberOfLines={1} ellipsizeMode="tail" style={styles.text}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={[styles.text, {color: theme.text}]}>
                 {item.title}
               </Text>
             </ListItem>

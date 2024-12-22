@@ -76,18 +76,26 @@ const TrackOptionsModal: React.FC<Props> = ({
         statusBarTranslucent={true}
         onRequestClose={() => setVisibleMdalPlayLists(false)}>
         <Title>{track?.title}</Title>
-        <FlatList
-          data={selectedPlayLists}
-          renderItem={({item}) => (
-            <ListItem
-              icon="queue-music"
-              onPress={() => addTrackInPlayList({playListName: item.name})}>
-              <Text style={[styles.text, {color: theme.text}]}>
-                {item.name}
-              </Text>
-            </ListItem>
-          )}
-        />
+        {selectedPlayLists.length ? (
+          <FlatList
+            data={selectedPlayLists}
+            renderItem={({item}) => (
+              <ListItem
+                icon="queue-music"
+                onPress={() => addTrackInPlayList({playListName: item.name})}>
+                <Text style={[styles.text, {color: theme.text}]}>
+                  {item.name}
+                </Text>
+              </ListItem>
+            )}
+          />
+        ) : (
+          <ListItem icon="add">
+            <Text style={[styles.text, {color: theme.text}]}>
+              Nueva playlist
+            </Text>
+          </ListItem>
+        )}
       </Modal>
 
       <Modal

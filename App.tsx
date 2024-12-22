@@ -165,7 +165,7 @@ function App() {
   return (
     <>
       <StatusBar backgroundColor={'transparent'} translucent />
-      <NavigationContainer theme={isDarkMode ? DarkTheme : DefaultTheme}>
+      <NavigationContainer theme={DarkTheme}>
         <SafeAreaProvider>
           <Stack.Navigator
             screenOptions={{

@@ -53,6 +53,8 @@ const TracksScreen = () => {
 const styles = StyleSheet.create({
   list: {
     paddingBottom: 100,
+    paddingHorizontal: 15,
+    gap: 5,
   },
   text: {
     fontWeight: '500',
